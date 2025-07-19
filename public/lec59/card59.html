@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lec59</title>
+  </head>
+  <link
+    rel="stylesheet"
+    href="../../node_modules/bootstrap/dist/css/bootstrap.css"
+  />
+  <link
+    rel="stylesheet"
+    href="../../node_modules/bootstrap-icons/font/bootstrap-icons.css"
+  />
+  <script>
+    var products = [
+      { name: "boat neckband", price: 7000, photo: "../assets/pic2.jpg" },
+      { name: "sunglasses", price: 4000, photo: "../assets/mastercard.png" },
+      { name: "socks", price: 500, photo: "../assets/visa.png" },
+    ];
+
+    function bodyload() {
+      for (var product of products) {
+        var card = document.createElement("div");
+        card.className = "card m-2 w-25 p-2";
+        card.innerHTML = `<img src=${product.photo} height="200">
+       <div class="card-header">  
+         <h2>${product.name}</h2>  
+       </div>    
+             <p> &#8377; ${product.price}</p>        
+  
+<div class="card-footer">
+ <button class="btn btn-danger w-100">
+<span class="bi bi-cart4"></span>Add to cart
+</button>
+</div>
+`;
+document.getElementById("catalog").appendChild(card);
+      }
+    }
+
+
+  </script>
+  <body class="container-fluid" onload="bodyload()">
+    <div id="catalog" class="d-flex flex-wrap"></div>
+  </body>
+</html>

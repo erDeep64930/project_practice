@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>lec62</title>
+    <link rel="stylesheet" href="../../node_modules/bootstrap-icons/font/bootstrap-icons.css">
+
+    <script>
+        function Clock(){
+            var now = new Date();
+            document.getElementById("time").innerHTML = now.toLocaleTimeString();
+        }
+
+function bodyload(){
+setInterval(Clock, 1000 );
+
+var now = new Date();
+
+var icon = document.getElementById("icon");
+
+var msg = document.getElementById("msg");
+
+var hrs = now.getHours();
+
+if(hrs >= 0 && hrs < 12){
+msg.innerHTML = "good morning";
+icon.className ="bi bi-brightness-alt-high"
+}else if 
+     (hrs>=13 &&hrs<=17){
+        msg.innerHTML = "good afternoon";
+        icon.className ="bi bi-brightness-high"
+}else {
+    msg.innerHTML = "good evening";
+    icon.className ="bi bi-cloud-sun-fill";
+ 
+}
+
+
+
+
+  
+}
+    </script>
+    <style>
+        #container {
+            display: flex;
+            justify-content: space-between;
+            width: 80%;
+            margin: 0 auto;
+            background-color: lightblue;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body onload="bodyload()">
+    <div id="container">
+        <h2>Amazon shopping </h2>
+        <span id="icon">
+            <span id="msg"></span>
+        </span>
+        <span id="time"></span>
+    </div>
+</body>
+</html>

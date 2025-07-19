@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>lec81</title>
+    <script src="../../node_modules/jquery/dist/jquery.js"></script>
+    <script>
+        $(function(){
+            var categories = ["electronics","footwear","fashion","book"];
+
+            $.each(categories,function(key,value){
+                $(`<option>${value}</option>`).appendTo("select")
+            })
+        })
+    </script>
+</head>
+<body>
+    <h2>please select the option</h2>
+    <select></select>
+</body>
+</html>

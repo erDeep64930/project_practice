@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>lec69</title>
+</head>
+<body onload="bodyload()">
+    <ol></ol>
+
+    <script>
+        function bodyload() {
+            var data = [
+                {category: "groceries", products: ["bread", "milk"]},
+                {category: "kitchen", products: ["spices", "oil"]},
+                {category: "household", products: ["toilet paper", "shampoo"]},
+                {category: "beauty", products: ["makeup", "haircare"]},
+                {category: "pet", products: ["dog", "cat"]},
+                {category: "electronics", products: ["tv", "mobiles"]},
+                {category: "clothing", products: ["shirts", "pants"]},
+                {category: "books", products: ["fiction", "non-fiction"]},
+                {category: "food", products: ["pizza", "burger"]},
+                {category: "toys", products: ["ball", "car"]},
+                {category: "home decor", products: ["sofa", "table"]},
+            ];
+
+            for (var i = 0; i < data.length; i++) {
+                var olLi = document.createElement("li");
+                olLi.innerHTML = data[i].category;
+
+                var ul = document.createElement("ul");
+
+                for (var j = 0; j < data[i].products.length; j++) {
+                    var ulLi = document.createElement("li");
+                    ulLi.innerHTML = data[i].products[j];
+                    ul.appendChild(ulLi);
+                }
+
+                olLi.appendChild(ul);
+                document.querySelector("ol").appendChild(olLi);
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,11 @@
+https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos?sol=1000&api_key=DEMO_KEY
+
+
+    var data =[
+    {category:"electronics",products:["tv", "mobiles"]},
+    {category:"clothing", products:["shirts", "pants"]},
+    {category:"books", products:["fiction", "non-fiction"]},
+    {category:"food", products:["pizza", "burger"]},
+    {category:"toys", products:["ball", "car"]},
+    {category:"home decor", products:["sofa", "table"]}
+    ]

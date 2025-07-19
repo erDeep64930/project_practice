@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Layout designing</title>
+    <style>
+        header,
+        footer {
+            background-color: brown;
+            color: white;
+            padding: 20px;
+            font-size: 20px;
+            text-align: center;
+        }
+
+        section {
+            height: 450px;
+            display: grid;
+            grid-template-columns: 2fr 8fr 2fr;
+            margin-top: 20px;
+        }
+        nav div {
+            border: 2px brown solid;
+            width: 120px;
+            padding: 5px;
+            margin-bottom: 10px;
+            background-color: brown;
+            font-size: 18px;
+            border-radius: 10px;
+            color: white;
+        }
+        aside{
+            width: 100px;
+            height: 50px;
+            text-align: center;
+            border: 2px dotted brown solid;
+        }
+        article{
+            background-color: chocolate;
+            margin-left: 20px;
+            font-size: 40px;
+        }
+        figure{
+            height: 250px;
+            border: 2px double brown;
+            width: 200px;
+        }
+        dialog {
+            position: absolute;
+            
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div>Amazon Shopping design.</div>
+    </header>
+    <section>
+
+        <nav>
+
+            <div>Home</div>
+            <div>Electronic</div>
+            <div>Fashion</div>
+            <div>Footwear</div>
+
+
+
+        </nav>
+        <main>
+            <dialog open>Any help</dialog>
+            <div>Welcome to online shoping</div>
+            <figure>
+                Your figure
+            </figure>
+            <figcaption>Apple macbook pro</figcaption>
+
+
+            <article>
+                70% off on electronics
+            </article>
+        </main>
+
+
+        </main>
+        <aside>
+            Ads here...
+        </aside>
+    </section>
+    <footer>
+        <div>
+            &copy; Copyright 2024
+        </div>
+    </footer>
+</body>
+
+</html>

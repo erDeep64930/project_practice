@@ -1,0 +1,250 @@
+           jQuery
+
+
+(function(){}) = anonymous function
+
+factory = it is a collection of values and functions.
+
+factory uses single call function.
+
+---------------
+
+-to access the jquery object= use "$"
+
+<script>
+$(function(){
+
+})
+</script>
+
+this is for before the jquery loading the page
+
+or
+
+<script>
+
+$(document).ready(function(){
+
+})
+</script>
+
+this is for after the jquery loading the page
+
+
+-----------
+
+jquery reference technique 
+
+-jqueryy can refer html elements by using all css selectors.
+
+eg:-
+
+$("p") = type selector 
+
+$("#para") = id selector 
+
+$(".para2") = class selector
+
+
+
+query dom method :-
+
+html() -innerHTML
+text() -innerText
+val()
+attr()
+prop()
+append()
+appendTo()
+prepend()
+before()
+after()
+
+
+----------------------------------------------------------------
+
+all javascript events are same in jquery.js
+
+onclick = click 
+
+onchange = change
+
+onblur = blur
+
+no event handler 
+
+eg:-
+
+<button onclick="insertClick()"></button>
+
+
+now 
+
+$("button").click(function(){})
+
+
+only "event" is allowed as event argument - yhere is no "this" keyword.
+
+jQuery iteration :-)
+
+
+$.each()
+
+syntax:
+
+$.each(data,function(key,value){
+    //
+})
+
+------------Lec-81 end here --------------------
+
+
+jQuery DOM manipulation methods --------------------------------
+
+html()
+text()
+append()
+prepend()
+before()
+after()
+
+
+jQuery provide animation effect:
+
+eg:-
+
+show()
+hide()
+toggle()
+slide()
+slideToggle()
+
+
+jQuery UI components:-
+
+-effects
+-components
+-interaction
+
+it is similar to bootstrap with pe defined template and interaction.
+
+download and set up jquery ui:-
+
+
+1. visit -jquery ui .com
+2. download the file extract the file.
+3. keep the files in node_modules 
+
+
+jquery interaction:-
+
+draggable()
+resizeable()
+etc:-
+
+visit oficial website:-
+
+
+jquery wigdges-
+
+accordion 
+datepicker()
+dialog()
+
+jquery ajax:-
+
+
+
+----------L-82 end here----------
+
+Q. what is diffrence between fetch() and ajax():-
+
+fetch() - it is a window method.
+    -it read the data in binary form.
+    -you convert data into json.
+    -it is only for "get" not for other action [post,put,delete].
+
+
+ jQuery Ajax method :-
+
+    -they are imported and used from jquery library.
+    -return the data directly in json.
+    -it can handle various action such as [get,post,put,delete].
+    -it provide error obejct that can easily track the error in request.
+
+    Q. what are the issue with jquery ajax method ?
+
+    -cors [cross origin resources sharing ]
+
+    -jquery ajax can handle CORS issue.
+
+    -jquery ajax request can be blocked by browser.
+
+    -explicitly you have to enable and configure for cors.
+
+    - ajax is asynchronous but it need external asyn technique to handle various interaction.
+
+    -Q . what is solution ?
+    -axios-[react]
+    -HttpClient with RxJs -[angular]
+
+
+    =>they are async and they can handle cors implicitly.
+
+ -AJAX in jquery provides life cycle method , which can tack the status of ajax request at every phase.
+
+ ---------------------
+
+           Sass:-
+
+
+           Syntactically awesome style sheet:-
+
+           css-recomipler:-
+
+
+           it is easier for developer:-
+
+           less code more functionality:-
+
+Browser = css
+Developer = Sass;
+
+Sass = reusability ;separtion , extensibility etc...
+
+Sass file are compactible with every  web technology:-
+[react,angular,vue,javascript,.net.php,python etc...]
+
+
+Set up Environment:-
+
+
+npm i -g sass
+
+create a extension with ".scss" extension
+
+trans compile sass into css;
+
+sass inputFile = outputFile;
+
+sass program.scss = program.css
+
+  Sass Hierarchy:-
+
+  ypu donot need rational selcetor [child ,decendent].
+
+  
+
+
+
+
+
+
+
+
+
+
+    -
+
+
+

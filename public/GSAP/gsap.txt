@@ -1,0 +1,10 @@
+
+          ~GSAP~
+
+GSAP- you  can animate element of html via js.
+
+1.gsap.to
+2.gsap.from
+3.gsap.fromTo
+
+[from{initial} ------>to{final}]

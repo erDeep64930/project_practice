@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lec75</title>
+    <script>
+        class Database
+        {
+            Connect(){
+                alert("Connecting to database...");
+            }
+Insert(){
+    document.write("record inserted");
+   
+
+}
+Delete(){
+    document.write("record deleted");
+   
+    
+}
+        }
+
+        let db = new Database();
+
+        function InsertClick(){
+            db.Connect();
+            db.Insert();
+        }
+        function DeleteClick(){
+            let db = new Database();
+            db.Delete();
+            db.Connect();
+        }
+    </script>
+</head>
+<body>
+    <button onclick="InsertClick()">Insert</button>
+    <button onclick="DeleteClick()">Delete</button>
+</body>
+</html>

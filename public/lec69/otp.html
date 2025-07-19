@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PIN Validation</title>
+    <script>
+        let correctPin = "1234"; // Set the correct PIN
+        let attempts = 0;
+        const maxAttempts = 3;
+
+        function validatePin() {
+            const inputPin = document.getElementById("pinInput").value;
+
+            if (attempts < maxAttempts) {
+                if (inputPin === correctPin) {
+                    alert("Access granted!");
+                    attempts = 0; // Reset attempts on success
+                } else {
+                    attempts++;
+                    alert(`Incorrect PIN. You have ${maxAttempts - attempts} attempts left.`);
+                    
+                    // Check if max attempts reached
+                    if (attempts === maxAttempts) {
+                        document.getElementById("pinInput").disabled = true; // Disable input
+                        document.getElementById("submitBtn").disabled = true; // Disable button
+                        alert("All attempts used. Access blocked.");
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body>
+    <h1>PIN Validation</h1>
+    <input type="password" id="pinInput" placeholder="Enter PIN" />
+    <button id="submitBtn" onclick="validatePin()">Submit</button>
+</body>
+</html>

@@ -1,0 +1,459 @@
+              
+                      Cascade Style Sheets
+                      ____________________
+
+
+style can be define in 3 ways :-
+ 1.Inline 
+ 2.embedded style
+ 3.External style
+
+#Inline Style:
+  -they are faster.
+  -you cannot reuse it.
+
+ #Embedded Style
+  -style are defined by using <style> container </style>
+  -style are not accessible to other pages.
+
+  syntax:
+
+   <style>
+     selector{
+          attribute:value;
+           }
+   </style>
+
+
+Q.where to embed the style container , Head or body section ?
+  - you can embed in both the section 
+
+Q. what is the difference between the head and body section ?
+ -style in head section are intend to load into memory and apply when ever required .
+
+ Style in body section are intended to apply on body load .
+
+Q.what is MIME type for style ?
+-multipurpose internet main extension
+ {
+    "text/css"
+ }
+
+ eg: 
+ <style type="text/css">
+
+ Q. what is media type for style ?
+ -media type are used to target stye for printer ,screen or speech .
+
+
+<style type="text/css" media="print/screen"></style>
+
+3. External Stylesheet
+   -you can define the separate style sheet with extension".css"
+   -you can link any page 
+   -external stylesheet can increase the number of request 
+   that increase the load time .
+
+  <link rel="stylesheet" href="../src/style.css"> 
+
+  ---Dynamic files are kept in scr folder
+
+Q.what is minification ?
+ -it sis the process used to reduce the  file size .
+ -it is compressing the files
+ -it remove blank spaces ,line break, short hand techniques to reduce the size
+
+ 
+
+ effects.css = development [uncompressed files]
+ effect.min.css = production [compressed files]
+
+
+Q.can you edit minified files?
+-yes ,but not recommended.
+
+Q.what is cdn ?
+-Content Delivery Network
+-keep repository in server give access from any remote location .
+
+
+
+Selector in CSS .
+
+----------L-31 end here ---------
+
+#Inline Style 
+<h1 style="styleAttribute:value"></h1>
+
+#Embedded CSS/ External CSS files
+ selector
+ {
+    styleAttribute:value;
+ }
+
+ #Primary/basic css selector:-
+
+ 1.Type selector
+ 2.Id Selector
+ 3.Class selector
+
+ 1.Type selector
+   -it is define the element tag name
+   -it apply to every element that occur in the page.
+
+eg:-
+h2{
+     styleAttribute:value; 
+}
+p{
+      styleAttribute:value;
+}
+
+etc.
+
+#you can apply to group 
+h2,p{
+      styleAttribute:value;
+}
+- this will apply to all h2 and p tag.
+
+2.Id Selector :-
+  -it define by #
+  -it is access by using "id" attribute
+  -you can apply effect only to require element
+  -every element can have only one attribute .hence you can apply multiple group eg effect in this 
+
+NOTE:-every element can have only one id 
+
+3.Class Selectors -
+
+  -it is define "."
+  - it is access by "class"
+  -Dynamically access by "className" attribute.
+
+  -you can apply multiple classes to single element .
+
+  <h2 class="class1 class2 "></h2>
+
+priority:-
+       id > class > type selector 
+
+ #rational selector or combinator :-
+
+ apply effect to the parent child hierarchy, or adjacent and general 
+
+ eg1:-
+    <ol>
+       <li></li>
+    </ol>      
+
+    [ol-parent ,li-child]
+
+eg2:-
+
+ <div>
+   <p></p>
+ </div>   
+
+ [div-parent ,p-child]
+
+div space p {
+    "it indicate that all children inside div" 
+}
+
+1.Decendents selector :
+ -it apply effect to all child under specific parent.
+ -it can apply to any level
+
+ parent child{
+    //
+ }
+
+ eg:
+ div space p {
+
+ }
+
+ 2.Child Selector:
+
+ -it apply to effects to direct child.
+ -it will not span effect to multiple level 
+
+ parent > p {
+    //
+ }
+ eg :
+ div > p{
+
+ }
+
+ #adjacent Sibling :
+
+ -it define effect for immediate adjacent Sibling [element] after the specific element.
+
+ h2 + p{
+    //
+ }
+
+ #General Sibling:-
+
+ h~p{
+    //
+ }
+
+-it define the effect for every element that occur after the specified.
+-it define any level.
+- it will apply for every paragraph after h2 
+
+
+## Attribute Selector :-
+
+ eg:
+ input[type="button"]{
+    background-color:"red";
+ }
+
+-several html element are present by using attribute of tag
+-hence we have to apply effect based on attribute and its value
+
+
+<p>para1</p>
+<p id="p2">para1</p>
+<p>para1</p>
+<p id="p4">para1</p>
+
+p[id]{
+    color: black;
+}
+it will apply to all  id it dont care 2/4
+
+p[class]{
+    //
+}
+
+-attribute selector uses condition for value
+
+
+-------l-32 end here---------
+
+Dynamic pseudo classes:-
+
+-dynamically allow to change according to the state and situation .
+-pseudo refer to name that map to different element .
+-eg:
+<a>Anchor</a>
+<link>
+-class is pre define template that comprises dat and logic .
+
+h2:className{
+    //
+}
+
+1:link
+2:hover 
+3:active
+4:visited
+
+
+
+#Dynamic element validation state pseudo classes :
+
+-required,optional,valid,invalid,in-range,out-range
+
+
+---------l-33 END HERE---------
+
+
+
+structural pseudo classes :-
+
+:first-child
+:last-child
+:nth-child
+:nth-of-type
+:nth-last-of-type
+:root 
+:empty
+
+dropCap
+
+p::first-letter{
+   font-size:40px;
+   color:green;
+}
+p::first-line{
+   color:blue;
+}
+
+
+-------l-34 end here-----
+
+# CSS Unit:-
+
+1.Absolute
+2.Relative
+
+absolute [in,cm,pt,px,%]
+
+
+ css color :-
+
+1.hexa decimal color 
+2.rgb color()
+3.rgba()
+
+color name:
+  h2{
+    color:red;
+  }
+
+  hexa code 
+  h2{
+   color:#ff0033;
+  }
+
+  rgb()
+  h2{
+   color:rgb(255,0,0)
+  }
+
+  rgba()
+
+  h2{
+   color:rgba(255,0,0,0.3)
+  }
+
+  #CSS Inheritance:-[these are  generally used in saas concept]
+
+  -Inherit
+  -initial
+  -Unset
+
+  Inheritance- is a process of extending  and allow to use the existing value .
+
+   -Inherit : implement the parent effect 
+  -initial:set the default effect
+  -Unset:clear all effects
+
+  syntax:
+
+  body{
+   color:red;
+  }
+  p{
+   color:initial;
+  }
+
+
+#CSS Box model:
+
+this consist of [margin,padding,border]
+
+margin:-  bahar se gap lana 
+padding :- andar se gap lana
+border:-
+
+shorthand:-
+ margin [top bottom left right];
+
+ for applying border we apply padding .
+
+ border-left-style [double , dashed,solid,groove].
+
+ #CSS position :
+
+ -static
+ -Relative
+ -sticky
+ -fixed
+ -absolute
+
+ #static = it keep the element a/to normal document flow 
+ - it is a default position
+ - it is not effected by top , left ,right or bottom position value .
+
+#Fixed:
+-it remove the element from the normal  document
+-its position is fixed and locked from scrolling .
+ - it is effected by top , left ,right or bottom position value .
+
+ #Absolute:
+ -same like fixed but will not lock the scrolling 
+ - it is effected by top , left ,right or bottom position value .
+
+ #sticky
+ -it keep the element a/to normal flow of document 
+ -
+
+  
+------l-39------
+
+CSS 2D Transform
+
+-translate
+-scale
+-rotate
+-matrix
+
+css 2d matrix
+-it allow to define the multiple Transform
+
+syntax:
+matrix(scaleX(),skewX(),scaleY(),translalteX(),translalteY())
+
+#css animation
+
+Q. what is keyframe?
+-animation are designed by using frame 
+usually animation contain 30fps [frame per second]
+-
+
+------L-41-------
+
+     --Bootstrap--
+
+files require for using bootstrap components
+
+bootstrap.css
+bootstrap.icons.css
+jquery.js
+bootstrap.bundle.js
+
+
+inline vs block 
+-inline :-span ,button,em
+-block :- h1-6,p,br
+
+------Self Introsepection----------
+
+CSS Gradient:-
+-[3 types of gradient]
+
+1. Linear
+2. Radial
+3. Conical
+
+syntax:
+background-image:linear-gradient(direction, Color1,colo2,...)
+direction:- [to right, to bottom etc.]
+
+eg:-
+background-image:linear-gradient(65deg,red,blue)
+
+#CSS Dimension Property:-
+
+1. Width
+2. Height
+3. Max-height
+4. Min-height
+5. Max-Width
+6. Min-Width
+
+~Max-height:-
+ if it reach its max position then it overflow.
+
+
+syntax: overflow:scroll;
+
+
+

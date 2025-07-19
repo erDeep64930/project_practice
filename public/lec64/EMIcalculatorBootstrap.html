@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EMI Calculator</title>
+    <link rel="stylesheet" href="../../node_modules/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="../../node_modules/bootstrap-icons/font/bootstrap-icons.css">
+    <style>
+        .form-element {
+            width: 100px;
+        }
+    </style>
+</head>
+
+<script>
+    function UpdateAmount() {
+        document.getElementById("amountRange").value = document.getElementById("txtAmount").value;
+    }
+
+    function AmountChange() {
+        document.getElementById("txtAmount").value = document.getElementById("amountRange").value;
+    }
+
+    function UpdateYears(){
+        document.getElementById("yearRange").value = document.getElementById("txtYears").value;
+    }
+
+    function YearsChange() {
+        document.getElementById("txtYears").value = document.getElementById("yearRange").value;
+    }
+
+    function UpdateInterest(){
+        document.getElementById("interestRange").value = document.getElementById("txtInterest").value;
+    }
+
+    function InterestChange() {
+        document.getElementById("txtInterest").value = document.getElementById("interestRange").value;
+    }
+
+    function calculateClick() {
+        var p = parseFloat(document.getElementById("txtAmount").value);
+        var r = parseFloat(document.getElementById("txtInterest").value) / 12 / 100; // Monthly interest rate
+        var t = parseInt(document.getElementById("txtYears").value) * 12; // Convert years to months
+
+        // EMI calculation
+        var emi = (p * r * Math.pow(1 + r, t)) / (Math.pow(1 + r, t) - 1);
+
+        // Display the result
+        document.getElementById('result').innerText = `Your EMI is: ₹${emi.toFixed(2)}`;
+    }
+</script>
+
+<body class="container-fluid">
+    <div>
+        <h2>EMI Calculator</h2>
+        <div class="row">
+            <!-- 1st col -->
+            <div class="col">
+                <div class="input-group">
+                    Amount you need: <input type="text" class="form-element" id="txtAmount" onchange="UpdateAmount()">
+                </div>
+            </div>
+            <!-- 2nd col -->
+            <div class="col">
+                <div class="input-group">
+                    For <input type="text" class="form-element" id="txtYears" onchange="UpdateYears()"> Years
+                </div>
+            </div>
+            <!-- 3rd col -->
+            <div class="col">
+                <div class="input-group">
+                    Interest Rate: <input type="text" class="form-element" id="txtInterest" onchange="UpdateInterest()"> %
+                </div>
+            </div>
+        </div>
+        <!-- this is for the second row -->
+        <div class="row mt-4">
+            <!-- 1st col -->
+            <div class="col">
+                50,000 <input type="range" class="form-range" min="50000" max="400000" value="50000" id="amountRange" onchange="AmountChange()"> 400,000
+            </div>
+            <!-- 2nd col -->
+            <div class="col">
+                1 <input type="range" class="form-range" min="1" max="5" value="1" id="yearRange" onchange="YearsChange()"> 5
+            </div>
+            <!-- 3rd col -->
+            <div class="col">
+                10.5 <input type="range" class="form-range" min="10" max="21" value="10" step="0.5" id="interestRange" onchange="InterestChange()"> 21.5%
+            </div>
+        </div>
+        <!-- this is the submit button -->
+        <div class="row mt-4">
+            <div class="col">
+                <button class="btn btn-primary" onclick="calculateClick()">Calculate</button>
+            </div>
+        </div>
+        <h2 id="result"></h2>
+    </div>
+</body>
+</html>

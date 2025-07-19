@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>lec55</title>
+    <link rel="stylesheet" href="../../node_modules/bootstrap/dist/css/bootstrap.css" />
+    <script>
+function VerifyCard(){
+    var cardnumber = document.getElementById("txtCard").value;
+    var cardImg = document.getElementById("cardImg");
+    if(cardnumber.startsWith("4444")){
+        cardImg.src = "../assets/mastercard.png" 
+    }else if (cardnumber.startsWith("5555")){
+        cardImg.src =  "../assets/visa.png"
+    }else {
+        cardImg.src =  ""  ;
+        cardImg.alt = "N/A"
+}
+}
+
+        function VerifyEmail(){
+            var email = document.getElementById("txtEmail").value;
+            var msg = document.querySelector("h2");
+            var atPos = email.indexOf("@");
+            if(atPos<3){
+                msg.innerHTML = "Invalid email";
+            }else {
+                msg.innerHTML = "Email Verified"
+            }
+        }
+    </script>
+</head>
+<body>
+    <div class="containder m-2">
+        <fieldset>
+            <legend>Your email</legend>
+            <input type="email" id="txtEmail" placeholder="Enter your email" required>
+            <button onclick="VerifyEmail()" class="btn btn-primary">Submit</button>
+        </fieldset>
+        <h2></h2>
+    </div>
+    <!-- here is bootstrap project -->
+
+    <div class="container-fluid">
+        <fieldset>
+            <legend>Your Card number </legend>
+            <div class="input-group">
+                <input type="text" class="form-control" id="txtCard" onkeyup="VerifyCard()"/>
+                <img src="" class="input-group-text img-fluid" id="cardImg" width="100" height="50"/>
+            </div>
+        </fieldset>
+    </div>
+    
+</body>
+</html>

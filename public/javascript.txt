@@ -1,0 +1,2236 @@
+                JavaScript
+
+-js is light weight  JIT[just in time] compile program language.
+
+Q.What is JIT?
+  -there are two type of compiling technique:
+  a) JIT [just in time]
+  b) AOT [Ahead of time]
+
+  --JIT compile logic in browser
+  --AOT compile logic in app level
+
+Js support various programming technique and approach:-
+
+a) Functional programming
+b) Structure programming
+c) Imperative programming
+d) Object Oriented programming
+
+Js is not an OOP language , it support only few features of oops
+
+Js is used in -
+               client side =html
+               server side =node.js
+               database =mongoDb
+               animation =Flash /CAD -[buildimg map civil branch]
+
+
+evolution
+
+1st browser "mosaic"
+  GML,SGML = Presentation
+  ECMA = Client side
+
+ 1990: Tim Berner Lee introduced html
+  1994 :netscape communication - develop browser 
+
+
+javascript with html [client side]
+
+js is used client side in order to reduce the burden on server 
+ via handling validation + Handling interaction + DOM manipulation[CRUD]
+
+Q.What is the role of Js?
+ -DOM manipulation
+
+ integrated js into page :-
+ Inline
+ embedded
+ external
+
+ inline 
+ eg:-
+ <button oncick="window.print()>Print</button>
+
+ embedded
+ eg:-
+ <script type="text/javascript">
+ function printPage(){
+   window.print()
+ }
+ </script>
+
+
+ How Js refer HTML elements ?
+-via DOM hierarchy[this is good not not used now-a-days becuase whenever the dom elements position are change then its dom upadte are needed to update .it is fast but not prefer]
+
+you can refer by using "ID"
+  document.getElementById()
+
+id had conflict with css reference
+id is not require if you accessing direct element
+
+-js can refer by using "css selector
+
+syntax:
+       document.querySelector("h2")-->//type selector
+
+       document.querySelector("#pic)-->id selector
+
+       document.querySelector(".pic)-->class selector
+
+
+
+Js Output technique
+
+-alert()
+-confirm()
+-console.log() ,warn(),success() ,error(), debug(),info() etc..
+-innerHTML
+-innerText
+-outerHTML
+-document.write()
+
+
+#JavaScript Input techniques:
+
+-prompt()
+-form input elements
+
+prompt():-
+   -it is like alert with input.
+
+   prompt("your message","default value);
+
+   prompt return 
+       null - on cancel
+       ""[empty]
+
+ #every form element have reference id  
+     <input type="text" id="txtName">
+     <select id="lstCities">
+     <input type="checkbox" id="optStock">
+
+you can access elemnet and use its properties:
+
+document.getElementById("txtName").value;
+document.getElementById("lstCities").value;
+document.getElementById("optStock").checked;
+
+Q. what is the strict mode of JavaScript?
+-strict mode for js allow to reduce code in-consistency 
+-so that developer has to follow the coding standard 
+
+<script>
+"use strict"
+x=10; //invalid -x is not define
+document.write("x=" + x);
+</script>
+
+
+Q.how to write the JavaScript for legacy browser?[old version]
+
+- by enclosing the code in html comment
+
+Q. how to js comment 
+// single line comment 
+/* */ multi line comment
+/// xml comment
+
+
+--------l-52 start here----------
+
+JavaScript language basic:-
+ 
+Variable:-
+-variable are storage location in memory where you can store a valueand use it as a part of expression
+-
+
+
+
+var x;
+document.write("x=" + x);
+
+Q.can a const change its value ?
+- dynamically yes .
+
+
+Global scope for variable :
+-you can declare a variable in the module scope
+
+
+#variable in javascript can be declare by using :-
+
+a.) var 
+b.) let 
+c.) const
+
+var :-
+-it define a scope variable
+-you can declare in any block of a function and access from any another block in function .
+-var allow declaring, initialization,assigning
+-var allow shadowing 
+-var allow hoisting 
+
+Q. what is shadowing ?
+ - it is the process of re declaring same  name identifier within the scope .
+
+ Q.) what is hoisting
+  - it is a compiling technique ,where compiler can find declarations of variable before using it . hence you can use a variable before declaring .
+eg:-
+
+<script>
+"use strict";
+function f1(){
+  x=10;
+  document.write("x="+x);
+  var x;
+  }
+  f1();
+</script>
+
+
+#let
+
+-it is used to define block scope variable.
+it is accessible only in block where it is declared or to its inner blocks .
+-it allow declaring,assigning,initialize
+-it will not allow shadowing and hoisting in "let"
+
+ 
+const 
+-it is used to define the block scope variable.
+-it will allow only initialization
+-no declaration
+-no assigning
+-no hoisting
+
+Q.why we need a const ?
+-const is require to initialize memory at the time of loading application or component 
+-memory is initialize with some default value .
+-if initialization is missing then by default value will be "undefined"
+
+Q. cam we declare a global variable inside a function ?
+ - yes , by browser window function
+
+ function f1(){
+  window.y = 20;
+ }
+function f2(){
+  document.write("y=20" + y);
+}
+eg:-
+
+
+#Variable Naming :-
+
+   - Variable Name must starts with alhpabet or underscore.
+  -variable name cannot exceed more than 255 charecter.
+  -dont use language keyword for variable name 
+  -always variable must speak what it is.
+
+  eg:-
+  var employee = new Employee();
+  var product = new Product();
+  var temporaryEmployee = new TemporaryEmployee();
+
+      Data Types:-
+
+  - it define the data structure .
+  - data type determine the size and type of data.
+  - data type are classified into 2 types:-
+
+    - 1.) Primitive data type
+    - 2.) Non Primitive Data type
+
+Primitive data type:-
+
+ - primitive data type are immutable types .
+ - their structure will not change .
+ - they fixed range for value .
+ - value range can't change .
+ - they use memory stack .
+ - stack use "LIFO" [LAST IN FIRST OUT].
+ -JS is primitive type :-
+
+       a). Number
+       b). String
+       c). Boolean
+       d). Null 
+       e). undefined
+
+  JavaScript is not a strongly typed . it is implicitly typed.
+
+ var x= 10 ; // x is number 
+ x = "john" // x is string.
+
+  js number type refer to -
+   -signed integer  [ -number]
+   -Unsigned integer [+number]
+   -floating point [24.56]
+   -double [334.56 ,567.876]
+   -decimal [29 decimal point]
+   -exponent
+   -binary
+   -octa
+   -hexa
+
+js uses "isNan()" method to verify the number .
+
+js cant identify a numeric value in string format . you have to explicitly convert into number by using following method 
+
+ a).parseInt()
+ b).parseFloat()
+
+
+NOTE:-
+
+# whatever input you get in html via form is string type so you need to convert it into other type .
+
+
+var a ="10ab";
+var b = 20;
+var c = parseInt(a)+b;
+ 
+ a= "ab20 // invalid
+ a = "10ag23" //10 valid 
+
+ 10 +true = 11 //only in js 
+
+ #String type :-
+
+ string is a literal with group of characters enclosed in -
+
+   a).single quote ['']
+   b).double quote [""]
+   c).back tick [``]
+
+-single and double quote are used to configure inner and outer string combination
+
+var link = "<a href='home.html'></a>"
+
+
+#String handling in javascript:-
+
+-js  provide a set of method and property to format and manipulate string .
+
+String formatting method:-
+
+-bold
+-italic
+-sup()
+-sub()
+-fontColor()
+-fontSize()
+-toUpperCase()
+-toLowerCase()
+
+eg:-
+syntax:-
+
+var msg = "welcome to js"
+msg.bold().italics().fontColor('green');
+
+
+#String Property:-
+
+-length : return the total number of characters
+
+-DRY = DO NOT REPEAT YOURSELF 
+
+onkeyup = help for button reusability.
+
+-onkeyup : action to perform when key is release.
+
+-onblur : action to perform wen control is blured.
+
+-onclick : action to performed when clicked 
+
+onload : action to perform on page or image load.
+
+#String manipulation:-
+
+1.) charAt() :-
+    it return the characters at specified index .
+
+2.) CharCodeAt() :-
+    it return the characters at ASCII code at specified index .
+
+3.) slice()
+4.) substr()
+5.) substr()
+6.) substring()
+  
+Q.what is difference b/w slice() , substr() and substring() ?
+
+-slice(): it can read the char b/w specified start and end index.
+-if end is not define , then it will read upto end of string .
+-end index must be greater than start index.
+
+string.slice(0,7) // 0to7
+string.slice(7) // 7 to end
+string.slice(7,0) // invalid 
+
+syntax:-
+ slice(startIndex, endIndex);
+
+ -SubStr():-
+
+ it can read specified number of char from given index number .
+
+syntax:-
+
+substr(startIndex, countOfChars);
+
+string.substr(7.3) // from 7 index it will read 
+3 characters
+
+
+substring():-
+
+it can read from specified index to any direction.
+
+syntax:-
+
+substring(startIndex, endIndex);
+
+note:
+
+endIndex can be less than start index.
+
+==================
+
+indexOf() and lastIndexOf():~
+
+-these are the function , which can find any charecter in a string and return its position. 
+- if charecter not found then it return -1 [ie,. charecter is not present]
+
+-lastIndexOf() :~
+ it will return the lasts occurance index .
+
+================
+
+startWith() and endWith():~
+
+-these are function used to verify the starting and ending char in a string .
+
+-these function return the boolean true when string is starting or ending with specific char.
+
+==========
+#match() :~
+it is used to verify and compare given string with any regular expression . it return true if string format is as per regular expression pattern
+
+#trim() and split():-
+
+-trim is used to remove the leading spaces in a string .
+
+-split() 
+
+
+==========L-56============
+
+# Null type 
+
+-it is an exceptional type.
+-exception occurs at run time.
+-null indicate that value is not supplied during run time.
+-you can verify null type by using"null" 
+
+summary of primitive type:-
+
+-number = numeric value
+-string  = literal
+-boolean = true/false
+-null = no value at run time
+-undefined = no value at compile time
+
+            Non-Primtive types:~
+      __________________________
+
+ -they are mutable types.
+ -they can change the structure according to state and situation .
+ -there is no fixed range for value.
+ -value range varies according to memory  available.
+ -they are stored in heap memory
+ -JavaScript non primitive types are:~
+             1.) Array
+             2.) Object
+             3.) map
+
+ # Array type:~
+
+ Queue : FIFO
+
+ Stack : LIFO eg.[browser history]
+
+  Array :~
+
+ -Array mean organizing in order and accessing in random order
+
+ -Stack mean organizing in order and accessing the last one first.[LIFO]
+
+ -Queue mean organizing in order and accessing the first one first . [FIFO].
+
+Q. what is purpose of Array ?
+    
+    -array is used in computer programming to reduce overhead and complexity.
+    -
+    -array will reduce the complexity by storing multiple value in sequential order.
+    -array will reduce complexity by storing multiple value under one name.
+    -array can handle any type of value.
+    -array size can be changed dynamically.
+
+
+    NOTE:-
+
+    few technology cant allocate various type of memory in sequential order hence they restrict array to same type of value and size cant be changed dynamically .
+
+    eg:~ [C, C++,JAVA,.NET]
+
+    Configure array :~
+
+    1.) Declaring array
+    2.) initialization of memory for array 
+
+  declaring array:-
+
+     var arrayName;
+     var products;
+     var categories;
+
+
+ initialization of memory
+
+  var arrayNAME =[];
+  var arrayName = Array();
+
+Q.) What is difference b/w array "[]" meta charcter and "array()" constructor ?
+
+array constructor can define the size of array . however size can be changed dynamically.
+
+
+#Storing value into array :~
+
+-values are stored and accessed from an array by using property.
+-property map to index in memory 
+
+let values = new Array(10, 20, 30, 40);
+
+Reading the value of array :~
+
+1.) Reference of property
+    -value["0"];
+    -values["1"];
+
+2.) Array method 
+
+
+     -toString();  => read and return all array elements  in string format .  [,]
+     
+     -join(); => reads and return all elements with custom delimiter ie., [separater]
+     
+     -slice(); =>read element b/w specified index.
+     
+     -filter(); =>return all elements that match given condition.
+     
+     -find(); => return the first element that match the given condition. 
+     
+     -map(); => it is an iterator for presenting elements. it is software design pattern.
+       -it can read element from a collection in sequential order , it does'nt require any condition , initialization and counter .
+
+#Reding values by using loops and external iterators 
+
+loops:-
+  [they are rarely used].
+
+1.)for() =>
+2.)while()=>
+3.)do while() =>
+
+modern loops:~
+
+1.)for..in // iterator of property 
+2.) for..of // iterator of values.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Dynamically creating and adding DOM elements using array :-
+
+1). you can create HTML elements using javascript by using 
+
+-document.createElement("elementName");
+
+eg:-
+
+document.createElement("h2");
+document.createElement("img");
+
+2). you can add elements dynamically into page by method 
+   -appendChild();
+   -append()
+   -prepend();
+
+  ~~~~~~~~~~~~~L-57 end here~~~~~~~~
+  
+
+Q. What type of data we can store in array?
+  - can store both primitive + non primitive types data.
+
+ Q. why we need function in array ?
+   - array is defined with function to handle call back mechanism. call back is a technique where function will execute according to situation.
+
+NOTE:~
+
+function in array must be anonymous function. anonymous function will jot have a name .
+    eg:-
+         function(){} //anonymous function
+         function sucess()()  //invalid in array.
+
+Adding value into array:-
+
+1.) push() => Add new value as lats element
+2.) unshift() => add new value as first element
+3.) splice()=> add new value at any specific position
+
+syntax:
+
+arrayName.push("item1","item2")
+
+arrayName.unshift("item1","item2");
+
+arrayName.splice(startIndex,deleteCount,"item1","item2");
+
+
+# Removing values from array :-
+
+1.) pop() => it remove and return the last item.
+
+2.) shift() => it remove and return the first item .
+
+3.) splice() => it remove and return the item at specific index.
+
+arrayName.splice(startIndex,deleteCount);
+
+
+#Sorting array elements:-
+
+1.) Sort() => it sort the item in ascending order.
+
+2.) Reverse() => it sort the items in reverse order of their occurance.
+
+syntax:
+
+arrayName.sort()
+
+arrayName.reverse()
+
+
+~~~~~~~~~L-58 end here ~~~~~~~~~~~
+
+  Object types:~
+
+  - introduced in 1960 by "alan kay " 
+  - to keep related data logic under one reference .
+  - object store data in property and define logic using function.
+  -object is a key and value collection.
+  - key are string type .
+  - value can be any type .
+
+  syntax : 
+  let object ={
+    "key": value,
+    "key": function(){},
+  }
+
+  eg:-
+
+  let tv ={
+    "name": "sumsung",
+    "price":50000,
+    "stock":true,
+    "qty":2,
+    "total":function(){}
+  }
+
+
+NOTE:~
+
+-The property of an object can be accessed through by using "this" keyword.
+
+-outside object you can access with the reference of object name .
+
+object{
+  this.key
+}
+
+object.key;
+
+-object acts as a reusable template, with sample data and logic which you can implement and customize according to requirement .
+
+-hence object is called "pseudo class".
+
+-if object is representing a format of data then it is known as json [javascript object notation]
+
+array of objects:-collection of objects.
+
+syntax:
+
+[
+  {},
+  {},
+]
+
+-----------L-59 end here-----------
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+AJAX calls in javascript with fetch method:-
+
+-Ajax is a asynchronous javascript function and XML.
+-it allow partial post back. it can post only a specific portion of page.
+-it uses "XmlHttpRequest" object.
+-JavaScript provide the "fetch" method which uses a synchronous request for fetching data from api.
+
+
+syntax:
+
+fetch("url").then(function(){get data}).then(function(){convert to json})
+
+distributed computing :-
+
+- two applications running on different machine can share information b/w them.
+
+eg:-
+COBRA
+DCOM 
+RMI
+EJB
+REMOTING
+WEB SERVICES [API]
+
+There are three specification :-
+
+1.) SOAP:
+  
+  consumer => XML request <=>XML response <= provider
+
+ 2.) REST:
+     consumer =>Query request <=> XML response <= provider
+
+ 3.) JSON:
+         consumer => JSON request <=> json response <= provider
+
+
+~~~~~~~~~L-60 end here~~~~~~~~~~
+
+Non Primitive types:~
+
+1.array
+2.object
+3.map
+
+Q.) What is Map type?
+    - map is similar to object with key and value collection.
+
+Q.) What is difference between map and object ?
+
+1.)
+ -[Object]=>key and value collection
+
+ -[map]=>key and value collection.
+
+2.) 
+-[Object]=>key is only string type.
+-[map]=>key can be any type 
+
+3.) 
+ -[Object]=>you need explicit iterator   to read keys and values.
+ eg:~ {for..in loop}
+ -[map]=>provide implicit iterator to read keys and values.
+eg:~ {keys(),values(),entries()}
+
+4.)
+-[Object]=>slow in accessing.
+-[map]=>faster than object.
+
+5.)
+-[Object]=>size of keys is unknown .
+-[map]=>allow to access size of keys.
+
+Map Method:~
+--------------
+
+1.) set()
+   -add a new value 
+2.) get()
+   -fetch the value by using key reference
+3.)keys()
+   -return all the keys.
+4.)values()
+   -return all values.
+5.)entries()
+   -return both the keys and values.
+6.)delete()
+   -delete specific key
+7.)clear()
+   -delete all entries.
+
+
+#Date type:~
+--------------
+
+-JavaScript date values are defined by using "Date()" constructor.
+
+-it will loads the current date and time into memory.
+
+var now = new Date();
+
+- you can configure date and time by using
+date value constructor.
+
+var now = new Date("2022-06-19");
+
+-you can access the date and time by using:-
+
+1).getHours()~return hour number in 24 hr format.
+
+2.)getMinutes()~return minute number 0-59
+
+3.)getSeconds()~return second number 0-59
+
+4.)getMilliseconds()~return milliseconds number 0-99
+
+5.)getDate()~return date number.
+
+6.)getDay()~return weekday number[0=sunday]
+
+7.)getMonth()~return month number [0=january]
+
+8.)getFullYear()~return full year number[2022]
+
+9.)toLocaleDateString()~return complete date .
+
+10.)toLocaleTimeString()~return complete time.
+
+
+#JavaScript timer events :~
+
+-setInterval();
+-setTimeout();
+-clearTimeout();
+-clearInterval();
+
+
+-setInterval();
+  => it is used to perform specific task repeatedly at given time interval.
+
+syntax:
+setInterval(functionName,timeInterval);
+
+Math object:-
+eg:-
+
+Math.PI , Math.round() etc..
+
+
+-----------L-62 end here-----------
+
+JavaScript Operator :-
+
+-Operator is an object that evaluates a value.
+-Operator comprises of operands that store data .
+
+x+y => x and y are operands + is operator.
+
+a.) Unary operator
+
+x++,--y
+
+b.) Binary operator
+
+x+y 
+x*y 
+
+c.) Ternary operator
+
+?:
+(condition)?if_true:if_false?
+
+-Operator are again classified into various groups based on the types of values they return .
+
+a.) Arithmetic operator : number 
+b.) Conditional operator : boolean
+c.) Logical operator : boolean
+d.) Bitwise operator : binary
+e.) Special operator : vary in functionality .
+
+Additional operators : it return the sum of given number.
+
+number + number = number;
+number + string = string;
+number + boolean = number;
+string + string = string;
+string + number = string;
+string + boolean = string;
+boolean + number = number;
+boolean + boolean = number;
+
+note:-
+
+-any operation with undefined will be NaN [not a number].
+
+-any operation with null will return number except string .
+
+#Subtraction Operator : it return the difference value.
+
+string - number = NaN;
+string[number]-number = number;
+number-boolean = number;
+boolean-boolean = number;
+
+All other operator = NaN;
+
+Note:~ 
+
+-operator uses implicit parsing , but only for numeric representing in string format.
+
+#Multiplication operator:-
+
+number*number=number;
+number*boolean= number;
+
+all other operation = NaN;
+
+#Division operator:-
+
+number/number=number;
+number/boolean = number [true]
+
+Modulus:
+
+it return the remainder value.
+
+number%number=number;
+number%boolean= number [true];
+
+#Exponent Operator :[ES5]
+ -It return the value of base raised to power.
+
+ 2**3=8;
+Math.pow(2,3);
+
+--------------------------
+
+Increment and decrement operator :-
+
+x++ => x=x+1; 
+x-- => x=x-1;
+
+----------------Lec-63 end here----------
+
+ #Conditional operator :-
+
+ == equal;
+
+ === identical equal;
+
+ !== not identical;
+
+ != not equal;
+
+> greater than;
+
+>= greater than or equal;
+
+< less than
+
+<= less than or equal;
+
+Q. what is diffrence b/w =,==,===?
+
+= it is used to assign a value;
+
+== it is used to compare 2 values of different types
+
+=== it is used to compare two values of same type.
+
+Note :
+
+all comparison operator return boolean values.
+
+
+#Logical operator :-
+
+&& logical AND
+
+|| logical OR
+
+! logical NOT 
+
+
+syntax:-
+
+=>condition 1 && condition 2 : expression will be true only when both condition are true
+
+=>condition 1 || condition 2 : expression will be true if any one condition is true.
+
+!true : negative of true is false.
+
+Q. difference b/w break and return ?
+
+
+break : break will terminate the execution within block ie., terminate in if block but stay in for loop.
+
+
+
+return : return will terminate the execution within block and stay ot of script/ loop.
+
+--both are jump statements . 
+--break: will terminate the block but will stay in script/ loop.
+--return :will terminate the script.
+
+
+
+----------L-64 end here---------
+
+
+Assignment Operator :
+
++=
+
+-= 
+
+*=
+
+/=
+
+%=
+
+#Special Operator :
+
+1.) typeof()
+   
+    
+var product = {
+  name: "tv",
+  price: 45000,
+  stock: true
+}
+
+-to read the property of products
+
+for(var property in product) {
+  document.write(`${property}:${typeof product[property]}`);
+}
+
+2.) instenceof 
+ it is used to check the classname , from where the given instance is derived.
+
+-t return the boolean operator that return true or false.
+
+3.) in operator 
+-it is used to verify the existence of any property in object.
+
+  
+-------L-65 end here-----
+
+4.of 
+5.void():
+
+6.) ternary operator :-
+
+syntax:
+
+(condition)?
+statement_if_true:statement_if_false
+
+
+#JavaScript statements:-
+
+-a statement is used to control the execution flow.
+-javascript statements are classified into following types:-
+
+1.) selection statement [if,else,switch,case,default]
+
+2.) iteration and looping control statement [ ]
+
+3.) Jump statement
+
+4.) Exception handling statement
+
+~~~~~~~~~ L-66 end here ~~~~~~~~
+
+Q. can we define switch inside case ?
+-no . not recommended . always defined a function and call using  function.
+
+~~~~~~~~~ L-67 end here ~~~~~~~~
+
+Loping control and iteration statement:
+
+-looping is the process of executing a set of statements repeatedly until given conditions are satisfied.
+
+-looping require :
+  a. initialization 
+  b.condition
+  c.counter
+
+-loop are created by using for , while, do while
+
+Q.) What is difference b/w loop and recursion ?
+
+
+
+~~~~~~~~~ L-68 end here ~~~~~~~~
+ 
+ 
+ for loop:-
+
+ -it is used when the exact iteration are known to the developer and iteration count will not change dynamically.
+
+-it require initialization , condition , counter
+
+syntax:
+
+for(initialization;condition;counter);{
+  //
+}
+
+ NOTE:-
+
+ don't use loop for reading data from collection . always use them for a counter to execute.
+
+ # Iterator 
+
+ -iterator is a software design pattern used to read elements from a collection in sequential order.
+
+ -it does'nt require initialization , condition an counter.
+
+ -iterator can be defined with :-
+
+
+*********
+ for..in  => [to read all property from collection]
+
+ for..of => [to read all values from collection]
+
+********
+
+syntax:-
+
+-for(var property in collection/object){
+  //
+}
+
+-for(var value of collection){
+  //
+}
+
+ #Jump statement:-
+
+ -continue
+ -break
+ -return
+
+ #continue :-
+
+ -it skip the current counter and continue to next counter.
+
+~~~~~~~~~L-69 end here~~~~~~~~~~
+
+Advance concept in JavaScript:~
+
+
+
+ #exceptional handling statement in JavaScript-
+
+ -in computer programming we have to handle 2 types of error 
+
+   a.) Compile time error 
+   b.) Run time error
+
+  Compile time error 
+
+  -these are the error related to syntax declaration in JavaScript.
+
+  - applications fail to compile.
+
+  -you can't view the Output.
+
+#Run time error:-
+
+-this are the error identified during runtime of application.
+
+-application successfully compile.
+
+-application start working .
+
+-application faces catastrophic failure.
+
+-this lead to abnormal termination of application.
+
+Q. What is the purpose of exceptional handling?
+
+-it is used to avoid abnormal termination.
+
+- JavaScript exceptional handling statements are 
+
+  a.) try 
+  b.) catch
+  c.) throw
+  d.) finally
+
+TRY:
+-it is monitoring block. it contain  the statement to execute.
+
+CATCH:
+-it is handler block. it will catch the exception thrown by application.
+
+THROW:
+-it explicitly throw exception when & message.
+
+FINALlY:
+- it comprises of statements to execute in all situations.
+
+******************
+
+# JavaScript Function-
+
+- a function is used for refactor.
+
+-refactor is a technique used to extract set of statement into a function.
+
+-it allow encapsulation and reusability
+
+Q. what is formal parameter ?
+- it is parameter defined in function declaration.
+
+Q. what is Actual parameter ?
+=it is parameter defined into a function while calling the function.
+
+Q. what is argument ?
+-argument define how many parameter are configure in function.
+
+Q.how are function are called?
+-by using the signature of the function
+
+Q. what a function can do , is defined in definition?
+-
+
+syntax:-
+
+function functionName(){
+  for (var i=1;i<=1;i++){
+    document.write(i "<br>")
+  }
+}
+
+function parameter 
+__________________________
+
+- function can be parameter less or parameterized.
+
+-function require parameter in order to modify the functionality
+
+- function can have multiple parameters.
+
+-function parameter are order dependency.
+
+-function can have any type of parameter. both primitive and non primitive.
+
+
+------------L-70 end here------------
+
+rest parameter  
+-----
+-javascript ES5 and higher versions support "Rest"parameter.
+
+-A single rest parameter can allow multiple arguments.
+
+-A Rest parameter is defined by using"...paramName".
+
+Syntax:
+          function Name(...restParam){
+            //
+          }
+          Name(arg1,arg2,arg3,arg4..);
+
+
+-every function can have only one rest parameter.
+
+-rest parameter must be the last parameter in formal list.
+
+syntax:-
+
+-function Name(...rest1,...rest2)    // invalid
+
+function name(...rest1,id);  // invalid
+
+function name(id,...rest1)  //valid
+
+Q. why rest parameter must be last parameter ?
+
+-as it read values upto end.
+
+Q. why function cant have multiple rest parameters ?
+
+-as one rest parameter will read up to end , you don't need multiple rest parameters and function will not allow multiple.
+
+____________________
+
+Function with Return type defined 
+___________
+
+ - if return is not using any operation then it is used to terminate the execution.
+
+- any statements define after return statement , is not reachable to compiler.
+
+Q. can we define return keyword in aa function that doesn't return value?
+
+-yes, it is used as jump statement.
+
+Function recursion
+---------------------
+
+-it is the technique of calling a function with in the context of current function.
+
+-it is used for batch operation.
+
+---------L-71 end here--------
+
+# Function closure:-
+
+- it is a technique of configuring a function inside another function.
+
+-the member of outer function are accessible to inner functions.
+
+- the member of inner function are not directly accessible to outer functions.
+
+-closure technique is allows the outer function to access the member of inner function.
+
+
+# Anonymous function :-
+
+-it is a function without name.
+
+-they are used in callbacks.
+
+-callback is a technique of accessing function and loading into memory according to state and situation.
+
+# Arrow functions :-
+
+- it is a function used to define a function i short hand technique.
+
+-you can minify the function declaration and defination.
+
+() : configure function with parameter.
+
+=>  : configure return value
+
+{}  :- configure set of statements.
+
+eg:-
+
+var print =()=>{
+  alert("statement1");
+}
+
+this is called LAMBDA syntax.
+
+
+# JavaScript OOP:~
+******************
+
+-in real-time development various programming systems are used like :-
+ a.) POPS 
+ b.) OBPS 
+ c.) OOPS
+
+  a.) POPS :- PROCESS ORIENTED PROGRAMMINNG SYSTEM
+
+-it support low level features.
+
+-it can directly interact with hardware services.
+
+-it uses less memory.
+
+-it is faster in communication.
+
+eg:-
+
+C, PASCAL,COBOL, etc..
+
+disadvantages of POPS:-
+
+-code reusability issue.
+
+-code separation issue.
+
+-no dynamic memory allocation.
+
+-code security issues.
+
+-update issues.
+
+[1 sols = 48 hrs]
+
+eg:- rover is made on this concept.
+
+eg:-remote control a/c,fridge
+
+
+ b.) OBPS : OBJECT BASED PROGRAMMING SYSTEM.
+
+ -it support code separation.
+
+ -it support code reusability .
+
+ -dynamic memory allocation.
+
+ -support extension.
+
+ eg:-
+  JavaScript, visual basic etc.,
+
+  Demerit:-
+
+  -code level security issues.
+
+  -no contracts
+
+  -no templates.
+
+  -no dynamic polymorphisms.
+
+
+c.) OOPS:OBJECT ORIENTED PROGRAMMING SYSTEM.
+
+ -supports contracts, template, dynamic polymorphisms .
+
+ -support code security.
+
+ eg:-
+ typescript , c++, .net , etc
+
+ Demerit:-
+
+ - they are tidious [ie., uses more memory].
+
+ - they are complex in configuration.
+
+ - they are slow.
+
+ [mobile = 1200 rs phone = symbion is operating system for mobile ]
+
+ Q. is JavaScript is OOPS language?
+  - no, it support some features of oops.
+
+ [typescript is OOPS language] 
+
+[typescript => javascript=>browser.]
+
+MVC -Code separation framework:-
+
+Java - spring.
+
+PHP - cake php , code igniter.
+
+python - django , flask.
+
+ruby - ruby on rail.
+
+.net - asp.net
+
+javascript - spine,angular,react,vue,
+
+
+features of oops:-
+
+-code reusability,separation, extensibility, security.
+
+Charecterstics of oops:-
+
+-inheritance,
+-encapsulation
+-polymorphisms
+-abstraction
+
+
+---------l-72 end here---------
+
+Modulus in JavaScript:-
+
+-Module is a set function, values and classes.
+
+-Module are used to build library for applications.
+
+-you can import and implement the library in your  project.
+
+-module provide reusability, maintability,testability,extensibility,separtion.
+
+-to use module in a project you need a module system working in pc.
+
+-there are various module system like :-
+
+-common js.
+
+-amd[asynchronous module distribution].
+
+-UMD[universal module distribution
+
+[node js provide us umd].
+
+--------------------
+
+[IEEE -international website for project standard for student ]
+
+[MCA,B.TECH,MSC]
+
+-do research on existing system.
+
+-he must identify the gap or suggest new features to existing app.
+
+-now they have to build a new application with given suggestions. [Academic project].
+
+[IEEE -scholar based paper]
+
+---------------------
+
+steps:
+
+1.you can create a module , which is javascript file with set of function.
+
+2.you have to mark the member with "export" , only exported member can be imported.
+
+syntax:
+
+ export function name(){
+  //
+ }
+3. you have to import the module and member of module in any page.
+
+import {member} from "module_file_path";
+
+NOTE:
+
+THE SCRIPT TYPE FOR MODULE SYSTEM MUST BE 
+
+<script type="module"></script>
+
+=======================
+
+class in OOP
+
+-In computer programming class is a "program template"
+
+Q. why we not have variable , function in class ?
+
+-because it is template.
+
+-class contain method and  property.
+
+-a class comprises of sample data and logic which you can implement and customize according to the requirement.
+
+-----L-73 end here----------
+class in oops-
+-class is a program template.
+it comprises of sample logic and data , which you can customize and implement.
+-class have various behaviour:-
+ a.)model 
+ b.)entity 
+ c.)blue print 
+
+
+ -class is reffered as model when it is representing data.
+
+-class is reffered as entity when it is representing business requirement.
+
+-class is always a blue print as it contain set of data and logic , which you can implement at any location.
+
+
+=======================
+
+class configuring :-
+
+1. class declaration
+2. class expression
+
+
+1. class declaration
+- it is used for classes that are requested according to requirement.
+
+class className {
+
+}
+
+class expression is used for classes that are loaded according state and situation.
+
+var refName = class{};
+
+class members:-
+
+-a class comprises of follwing members:-
+
+a.)property
+b.)method
+c.)accessors
+d.)constructor
+
+Q.can we define variablle in class ?
+-no.
+
+Q.can we define a function in class ?
+-no.
+
+Q.why we cannot define variable and function in class?
+-they are immutable. class can contain only mutable member.
+
+
+Q.what is difference b/w variable and property?
+
+or
+
+Q.what is difference b/w property and variable ?
+
+--they are immutable. class can contain only mutable member.
+
+~~~~~~~~~~~~~~~~~~~~~~
+
+properties :-
+
+-properties are references in class memory where you can store data.
+
+-data are stored in properties.
+
+-you can store any type of data in property [primitive or non-primitive]
+
+-syntax:
+
+class className
+{
+  property=value;
+}
+
+in order to access member of a class , you have to create an instance for class.
+
+let instance = new className;
+
+- "new" is dynamic allocating operator.
+
+-"constructor" is responsible for creating an object for class.
+
+-property are mutable , you can control the behavior of property using "accessor".
+
+----------------------
+         Accessors:-
+
+-  accessor will provide a fine grained control over properties.
+
+-accessor define the restriction for reading and writing data into property.
+
+-at the same time they can define the restriction .
+
+-the accesor used in class are:-
+
+a.)get()  =>[getter]
+b.)set()  =>[setter]
+
+a.)get():-
+-it is used for reading value from a property.
+
+b.)set():-
+-it is used for writing data into a property.
+
+syntax:-
+
+_propertyName;
+
+get Property()
+{
+  return this._propertName;
+}
+
+set Property(newName)
+{
+  this._propertyName = newName;
+}
+
+---------------------
+
+     methods
+
+-method define the action to perform.
+
+-all method specification are similar to function.
+
+Q.what is diffrence b/w function, method and procedure?
+
+-all are used to define function.
+
+-function : always intended to return value.
+
+-methods: always intended to discard the return value.
+
+-procedure: changes according to situation . it can discard memory or allocate memory according to return value.
+
+----------l-74 end here----------
+
+      constructor
+      ---------------
+
+ -it is pecial type of method in class ,which is used for instantiation .
+
+ -  instantiation [mean creating object]
+
+ - constructor is sub routine that execute automatically for every object.
+
+ - it initializes memory to store value at the time of allocating memory for class.
+
+ - In javascript constructor is anonymous[without name]
+
+ -class name is used for constructor implicitly.
+
+ -it is define by words "constructor" keyword
+
+ -every class have a default constructor.
+
+ - you can configure explicitly constructor to defie explicit actions.
+
+ -syntax:-
+
+ class className
+ {
+  constructor()
+  {
+
+  }
+ }
+
+
+let obj = new className; constructor reffered implicitly [internally].
+
+let obj = new className(); =>  ()=> refering to constructor.
+
+
+Q.is "()" is mandatory beside class name?
+-no. it is required only when constructor is parameterized.
+
+-javascript class cannot overload constructor.
+
+-javascript class cannot have private constructor.
+
+-javascript class cannot have static constructor.
+
+Hence JavaScript is not a complete OOP language.
+
+- a derived class constructor must have super call.
+
+note:-
+
+according to rule of the OOP language , if classes are configure with relationships then a derived class constructor ,ust call base class constructor.
+
+  in other OOP language, it is done implicitly but in javascript you need a explicit calling.
+
+  --------------------
+
+  code reusabilty:-
+
+ - it one of the key feature of OOP.
+
+ - you can configure code reusability by usinng 2 techniques.
+
+  a.) aggregation
+  b.)inheritance
+
+  **************************
+
+  a.) aggregation
+
+  -it is technique used to access the code of one class in another by using an instance of class.
+
+  - it is reffered as "has-a-relation".
+
+  - it is "object-to-object" communication.
+
+
+ b.)inheritance
+
+ - in this technique a  class can extend another class.
+
+ - you can configure relation b/w classes
+
+ -member of base class are accessible in derived class by using "super" keyword.
+
+ -without creating instance of base class you can access it s member by using "super" keyword.
+
+  - inheritance is code extensibility.
+
+  - this is reffered as "is-a-relation".
+
+  #single inheritance
+
+  #multi level inheritance.
+
+  -----------L-75 end here-----
+
+  Types of inheritance:-
+
+  1.)single inheritance:-
+
+ - a base class is extended by using derived class.
+
+  2.
+  )multi level inheritance.
+ 
+ - a derived class is extended by another derived class.
+
+ #Mutiple Inheritence:
+ 
+ -a single derived class implements multiple super classes.
+ 
+ -it is not supported for classes in OOP 
+
+ -it is supported for interface in OOP.
+
+ -javascript don't have interface.
+
+ syntax:-
+
+ class Derived extends super1, super2 //invalid
+ {
+
+ }
+
+ Q. why multiple inheritance is not supported classes ?
+
+ -because of constructor deadlock.
+
+-deadlock is a situation where every constructor wait for each other.
+
+-interface in OOP support multiple inheritance as it does not have constructor.
+
+---------------------------
+
+Polymorphism :-
+
+
+poly = many
+morphos = forms
+
+ - it is the ability of component to change its behaviour according to state an d situation.
+
+ -it is single base class object using the memory of multiple derived classes.
+
+ - in javascript a single object can work for various classes.
+
+ **********************
+
+ JavaScript browser events
+
+ -events is a message sent by sender to its subscriber in order to notify the change.
+
+ -events follow software design pattern  called "observer"
+
+ -Sender - sends notification
+
+ -Subscriber  contain action to perform.
+
+ - events uses a delegate mechanism [function pointer]
+
+ onclick => events
+
+ onclick ="insertClick()" =>event handler.
+
+ every event handler contain default arguments.
+
+ a.) this : contain information about object.[button]
+
+ b.)event : contain information about event [onclick]
+
+ -object informaion contain  [name,id,value];
+
+ -event information contain [clientX,clientY,keyCode,charCode] 
+
+------L-76 end--------
+
+
+various category of browser events:-
+
+1.keyboard events 
+
+2.mouse events
+
+3.Clipboard events
+
+4.button events
+
+5.Timer events
+
+6.Touch events
+
+
+------------------------------
+
+1.keyboard events :-
+
+-handle interaction with regard to keys
+
+-they specify action to perform while user is pressing the key.
+
+-onkeyup: when key is release.
+
+-onkeydown:when user hold down a key and
+
+-onkeypress: when user keys-in another key.
+
+ -----------L-78 end here-----------
+
+ # Timer events
+
+ -> setInterval()
+
+ -> clearInterval()
+
+ -> setTimeout()
+
+ -> clearTimeout()
+
+
+----------------------------------------------------------------
+
+
+ -> setInterval()
+
+ it makes any task inactive for specific duration of time and invokes after the time interval.
+
+ - it can execute the given task once for every object .
+
+ syntax:
+
+ setTimeout(functionName(){
+//
+ })
+
+
+
+# Browser object with
+
+
+a.) window
+b.) location
+c.) history
+d.) document
+
+
+
+
+
+ ---------79 end here---------
+
+Q. how to access the current location details ?
+
+-href =>complete URL to
+-path =>current file path
+-hash => current refrence ID
+-search =>query string to
+
+
+location.hash : it is used to access the current loaction by using "id" , it can access a named location within the page.
+
+----------------------------------------------------------------
+
+Navigator Object:
+
+
+-it is used to access the current browser details,
+
+-it include 
+  browser family
+  version
+  plugin
+  mime Types
+  geo location
+
+-it uses the property 
+  -appName
+  -language
+  -platform
+  -plugin[]
+  -mime Types[]
+  -userAgent.
+
+-navigator send cookies to the browser.
+
+
+#general browser details:
+
+# To get all plugin:-
+
+# to check any specific plugin ?
+
+Q.how to get the status of javascript in browser?
+
+= by using html element 
+
+<noscript>please enable javascript on browser</noscript>
+
+Q. how to get MIME types ?
+ <script>
+ function f2(){
+  for(var item of navigator.mimeTypes){
+    document.write(item.type + "<br>")
+  }
+ }
+ </script>
+
+
+Q.how to access the geoLocation ?
+
+----------------------------------------------------------------
+
+history object:-
+
+-it is used to access browser history details .
+
+-it allows to access
+ history.length
+ history.back()
+ history.forward()
+ history.go()
+
+-------L-80 END HERE---------
+
+ --------------------------------
+
+         jQuery
+
+-it is a javascript library.
+
+- library is a set of values and function.
+
+- you can import and implement in any application.
+
+-write less and do more.
+
+-light weight and faster,
+
+- it reduces the browser compatibility issues.
+
+-like jQuery there are several different library :-
+  React ,Angular,Vue
+  Ember.js ,Redux.js 
+
+  -Jquery is used for :-
+
+  -client side interaction 
+  -dom manipulation 
+  -interaction with api
+
+Set up jQuery for project :-
+
+npm i jquery
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+--------L-94 started---------
+
+React js:-
+
+-js library [spa]
+
+-javascript and jquery can also build SPA [ issue is]:-
+
+ -lots of dom manipulation
+ -lots of references
+ -lots of coding
+ -heavy application
+ -compactibility issue.
+
+therefore React.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+ 

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>lec60</title>
+    <link rel="stylesheet" href="../../node_modules/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="../../node_modules/bootstrap-icons/font/bootstrap-icons.css" >
+</head>
+
+<script>
+    function AddToCartClick(id){
+alert(id);
+    }
+
+    <!--  -->
+    function getCategory(){
+        fetch("https://fakestoreapi.com/products/categories").then(function(response){
+            return response.json();
+        }).then(function(data){
+    
+            data.unshift("All");
+    
+            for (var item of data){
+    
+               
+                 var option= document.createElement("option");
+    
+                 option.text = item.toUpperCase();
+    
+                option.value = item;
+    
+                 document.getElementById("lstCategories").appendChild(option);
+    
+            }
+        })
+    }
+
+    function getProducts(url){
+
+        document.getElementById("productContainer").innerHTML = ""; // clear existing products before adding new ones.
+
+        fetch(url)
+        .then(function(response){
+              return response.json();
+     
+        }).then(function(data){
+         for (var item of data){
+     
+             var div = document.createElement("div");
+     
+             div.className = "card m-2 p-2";
+     
+             div.style.width="200px"
+     
+             div.innerHTML = `
+             
+             <img src=${item.image} class="card-img-top" height="200px" width="200px">
+             <div class="card-header" style="height:140px">
+                   <p>${item.title}</p>
+             </div>
+                 <div class="card-body">
+                     <p>${item.price}</p>
+                     <p>Rating : ${item.rating.rate}</p>
+                     <p>Count : ${item.rating.count}</p>
+                 </div>
+             
+         <div class="card-footer">
+             <button onclick="AddToCartClick(${item.id})" class="btn btn-danger"><span class="bi bi-cart4"></span>Add to Cart </button>
+         </div>
+        `
+        document.getElementById("productContainer").appendChild(div)
+         }
+        })
+
+    }
+function bodyload(){
+getCategory();
+getProducts("https://fakestoreapi.com/products");
+
+ 
+}
+<!-- category changed -->
+
+function CategoryChange(){
+    
+    var categoryName = document.getElementById("lstCategories").value;
+
+    console.log(categoryName);
+
+    if(categoryName == "All"){
+        getProducts("https://fakestoreapi.com/products");
+    }else {
+        getCategory(`https://fakestoreapi.com/products/category/${categoryName}`)
+    }
+
+    
+}
+</script>
+
+<body class="container-fluid" onload="bodyload()">
+
+    <header class="bg-danger text-white text-center p-2">
+        <h1> <span class="bi bi-cart4"></span>Deep Design Web Online Shop</h1>
+    </header>
+    <!-- header end here -->
+    <div class="row">
+<div class="col-2">
+<h3>Select a category</h3>
+<select class="form-select mt-2" id="lstCategories" onchange="CategoryChange()">
+
+</select>
+</div>
+<!-- right side is for photos -->
+
+<div class="col-8">
+    <div id="productContainer" class="d-flex flex-wrap " >
+
+    </div>
+
+</div>
+<!-- add to cart  -->
+ 
+    <div class="col-2">
+        <button class="btn btn-warning mt-3">
+            [<span id="cartCount"></span>]
+            <span class="bi bi-cart3 m-2"></span>your cart</button>
+    </div>
+ 
+    </div>
+    
+</body>
+</html>

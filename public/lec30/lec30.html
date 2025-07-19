@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multimedia</title>
+    <link rel="stylesheet" href="../../src/style.css">
+    
+</head>
+<style>
+    #terms:checked+span{
+        color:green;
+    }
+    #terms+span{
+        color: red;
+    }
+
+    
+    #username+span{
+        display: none;
+    }
+     
+    #username:focus+span{
+        display: inline;
+    }
+
+    #username1:required{
+        border: 2px solid brown;
+        box-shadow: 2px 3px 5px brown;;
+    }
+    #username1:required +span {
+        display: block;
+        color: brown;
+    }
+    #username1:valid+span {
+        display: none;
+    }
+    #mobile:invalid+span{
+        display: block;
+        color:red;
+    }
+    #mobile:valid+span{
+        display: none;
+    }
+</style>
+<body>
+    <fieldset>
+        <legend >Terms and Conditions</legend>
+        <h2>Terms of Services</h2>
+        <input type="checkbox" id="terms" ><span>I accept </span>
+    </fieldset>
+
+    <fieldset>
+        <legend>
+            Register form
+        </legend>
+        <h2>User name</h2>
+        <input type="text" id="username" placeholder="name in block letter"> <span>name in block letter </span>
+        
+    </fieldset>
+
+    <fieldset>
+        <legend>user name</legend>
+        <h2>Dynamic element validation state pseudo classes</h2>
+        <input type="text" id="username1" required placeholder="name in block letter required"> <span>name in block is required
+    </fieldset>
+    <fieldset>
+        <legend>Mobile</legend>
+        <input type="text" id="mobile" required placeholder="enter mobile number" pattern="\+91\d{10}">
+        <span>Invalid mobile number</span>
+    </fieldset>
+</body>
+</html>

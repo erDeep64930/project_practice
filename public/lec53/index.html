@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lec53</title>
+    <link rel="stylesheet" href="../../node_modules/bootstrap/dist/css/bootstrap.css" />
+    <style>
+        .form{
+            border: 2px solid brown;
+            margin: 5px;
+            padding: 7px;
+           border-radius: 10px;
+        }
+        .dark-theme{
+            background-color: black;
+            color: white;
+        }
+        .light-theme{
+            background-color: white;
+            color: black;
+        }
+    </style>
+    <script>
+        function ChangeTheme(){
+            var themeCheckBox = document.getElementById("theme");
+            var formContainer = document.getElementById("formContainer");
+            if(themeCheckBox.checked){
+                formContainer.className="dark-theme"
+            }else{
+                formContainer.className="light-theme"
+            }
+        }
+        function ChangeColor(){
+            alert(document.querySelector("select").value)   ;
+document.querySelector("p").style.color = document.querySelector("select").value;
+        }
+
+        function ChangeCase(){
+            var username = document.getElementById("txtName").value;
+            document.getElementById("txtName").value = username.toUpperCase();
+        }
+        function VerifyUser(){
+            var username = document.getElementById("txtName").value;
+            var msg = document.getElementById("msg");
+            if(username.length>=4 && username.length<=10){
+msg.innerHTML = "user name verified ".bold().fontcolor('green').italics();
+            }else {
+                msg.innerHTML = "Invalid - username 4 to 10 charecter only".bold().fontcolor('red').italics();
+            }
+        }
+    </script>
+</head>
+<body>
+    <div>
+        <h2>Register User</h2>
+        <dl>
+            <dt>User Name</dt>
+            <dd><input type="text" id="txtName" onkeyup="VerifyUser()" onblur="ChangeCase()"/></dd>
+            <dd id="msg"></dd>
+        </dl>
+        <button onclick="VerifyUser()">Submit</button>
+    </div>
+    <div>
+        <fieldset id="">
+            <legend>
+               Choose effects to display
+            </legend>
+            <dl>
+                <dt>Font Color</dt> 
+                <dd>
+                    <select onchange="ChangeColor()">
+                        <option>Red</option>
+                        <option>Green</option>
+                        <option>Blue</option>
+                        <option>Yellow</option>
+                    </select>
+                </dd>
+             </dl>
+        </fieldset>
+        <p>Welcome to javascript</p>
+    </div>
+    <div class="container-fluid">
+        <div class="form" id="formContainer">
+            <div class="form-switch">
+                <input type="checkbox" class="form-check-input" onchange="ChangeTheme()" id="theme"/>Dark theme
+            </div>
+            <h3>Register user</h3>
+            <dl>
+                <dt>User name </dt>
+                <dd><input type="text" /></dd>
+                <dt>Password</dt>
+                <dd><input type="password" /></dd>
+                <dt>Email</dt>
+                <dd><input type="email" /></dd>
+            </dl>
+            <button>Login</button>
+        </div>
+    </div>
+    
+    
+</body>
+</html>

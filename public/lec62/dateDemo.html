@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>lec62</title>
+    <script>
+        function dateChange() {
+            var departure = new Date(document.getElementById("txtDate").value);
+
+           
+            document.querySelector("h2").innerHTML = ` Departure Date : ${departure.toLocaleDateString()}`
+        } 
+    </script>
+</head>
+<body>
+    <h1>Departure Date :~</h1>
+    <input type="date" id="txtDate" onchange="dateChange()">
+    <br>
+    <h2></h2>
+</body>
+</html>

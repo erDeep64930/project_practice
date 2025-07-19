@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Events concept</title>
+</head>
+<script>
+    function DatabaseOperation(buttonName){
+        switch(buttonName){
+            case 'insert':
+                alert("Insert operation performed");
+                break;
+            case 'update':
+                alert("Update operation performed");
+                break;
+            case 'delete':
+                alert("Delete operation performed");
+                break;
+            default:
+                alert("Invalid operation");
+                break;
+        }
+
+    }
+
+</script>
+<body>
+    <button name="insert" onclick="DatabaseOperation(this.name)">Insert</button>
+
+    <button name="update" onclick="DatabaseOperation(this.name)">Update</button>
+
+    <button name="delete" onclick="DatabaseOperation(this.name)">Delete</button>
+    
+</body>
+</html>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inheritence</title>
+</head>
+<script>
+
+    class SBI_BankApp_Version1
+    {
+        CustomerModule = "bank customer module for customer";
+
+        AdminModule = "admin admin module";
+    }
+
+    class SBI_BankApp_Version2 extends SBI_BankApp_Version1
+    {
+        CreditCardModule = "bank credit card  payments module";
+    }
+    
+    class SBI_BankApp_Version3 extends SBI_BankApp_Version2
+    {
+        NRIModule ="bank nri module for nri"
+    }
+
+    let window7User = new SBI_BankApp_Version1();
+
+    let window10User = new SBI_BankApp_Version2();
+
+    let window11User = new SBI_BankApp_Version3();
+
+
+</script>
+<body>
+
+</body>
+</html>

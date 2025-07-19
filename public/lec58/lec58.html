@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>lec58</title>
+    <link rel="stylesheet" href="../../node_modules/bootstrap/dist/css/bootstrap.css">
+</head>
+<script>
+    var categories = ["electronics","footwear","fashion","food"];
+
+    function bodyload(){
+        for (var category of categories) {
+            var li = document.createElement("li");
+            li.innerHTML = category;
+            document.querySelector("ol").appendChild(li);
+
+            var option = document.createElement("option");
+            option.text = category;
+            document.querySelector("select").appendChild(option);
+
+            var tr = document.createElement("tr");
+            var td = document.createElement("td");
+            td.innerHTML = category;
+            tr.appendChild(td);
+            document.querySelector(" tbody").appendChild(tr);
+        }
+
+    }
+</script>
+<body onload="bodyload()">
+    <div class="container-fluid">
+        <h2 class="text-center bg-danger text-white p-2 fst-italic">Array basic concept</h2>
+        <div class="row">
+<div class="col">
+<h3>category list</h3>
+<ol>
+
+</ol>
+</div>
+        </div>
+
+    </div>
+    <div class="col">
+        <h3>Select category</h3>
+        <select class="form-select">
+
+        </select>
+
+    </div>
+    <!--  -->
+    <div class="col">
+<h3>Category table</h3>
+<table class="table table-hover table-dark">
+<thead>
+    <tr>
+        <th>categories</th>
+    </tr>
+</thead>
+<tbody>
+
+</tbody>
+</table>
+    </div>
+    
+</body>
+</html>

@@ -1,0 +1,173 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+html, body {
+    width: 100%;
+    height: 100%;
+}
+#main{
+    width: 100%;
+    height: 100%;
+    background-color: #f8f8f8;
+    position:relative;
+    padding-top: 1px;
+}
+/* there is a bug in css whenever we give margin top we must provide padding top also always, */
+#nav{
+    height:100px;
+    width:100%;
+    /* background-color: red; */
+    margin-top:40px;
+    border-top: 2px solid #000;
+    border-bottom: 2px solid #000;
+   display: flex;
+   align-items: center;
+   justify-content: space-between;
+}
+#nav h2 {
+    /* background-color: blue; */
+    height: 100%;
+    width: 22%;
+    display: flex;
+    align-items: center;
+    justify-content:center;
+    border-right: 2px solid #000;
+    font-weight: 600;
+}
+
+#nav h1{
+    /* background-color: blue; */
+    height: 100%;
+    width: 20%;
+    display: flex;
+    align-items: center;
+    justify-content:center;
+    font-weight: bolder;
+}
+#nav h2:nth-last-child(1){
+    width: 20%;
+}
+
+#nav h2:nth-last-child(2){
+    width: 24%;
+}
+
+#center {
+    height: 80vh;
+    width: 100%;
+    /* background-color: red; */
+    padding:5vw;
+    position: relative;
+}
+
+#content {
+    width: 100%;
+    height: 100%;
+    background-color: blue;
+    position: relative;
+}
+
+#content video {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+}
+#overlay{
+   height: 50%;
+   width: 100%;
+   position: absolute; 
+   bottom: 0;
+
+   background-color: rgba(0, 0, 0, 0.103);
+   padding: 5vw;
+   backdrop-filter: blur(3px);
+}
+#over1{
+    display: flex;
+    align-items: center;
+    justify-content:space-between;
+
+}
+#over2{
+    display: flex;
+    align-items: center;
+    justify-content:space-between;
+    border-top: 2px solid #fff;
+    
+}
+
+#scroll{
+    height: 40vh;
+    width:100%;
+    white-space: nowrap;
+    overflow-x: hidden;
+    overflow-y: hidden
+
+}
+
+#container{
+    width: 100%;
+    height: 110%;
+    display: inline-block;
+    padding: 2vw;
+   animation-name: anime;
+  animation-duration: 2s; 
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+}
+
+#scroll img {
+    height: 80%;
+    border-radius: 50%;
+    width: 20%;
+    object-fit: cover;
+    object-position: 30% 30%;
+    margin: 1vw;
+}
+img{
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+}
+
+@keyframes anime{
+    from{
+        transform: translateX(0);
+    }
+    from{
+        transform: translateX(-100%);
+    }
+}
+
+#alphabet{
+    height:10vh;
+    display: flex;
+    align-items: center;
+    justify-content:center;
+    gap: 1vw;
+    border-top: 1px solid #000;
+    border-bottom: 1px solid #000;
+
+}
+#alphabet h5{
+    font-size: 2vw;
+    text-transform:uppercase;
+    border-bottom: 2px solid #000;
+}
+
+#alphabet h6{
+    font-size: 2vw;
+    text-transform:uppercase;
+    border: 1px solid #00000023;
+    /* background-color: #d2ee33; */
+    padding: 0.4vw;
+    border-radius: 50%;
+    transition: all 0.6 ease;
+}
+
+#alphabet h6:hover{
+    border:1px solid #000;
+    cursor: pointer;
+}

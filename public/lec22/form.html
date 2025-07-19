@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form</title>
+</head>
+<body>
+    <h2>Register User</h2>
+    <form method="POST">
+        name:<input type="text" name="name" /><br>
+        password:<input type="password" name="password" action="demo.aspx"/>
+        <input type="text" name=""pin" minlength="4" maxlength="4"/><br>
+
+<button>Register</button>
+    </form>
+
+    <div>
+        <h2>Selct City</h2>
+        <select name="category">
+            <option>Select Category</option>
+            <optgroup label="city">
+                <option value="50001">Hydrabad
+                </option>
+                <option value="50001">Delhi
+                </option>
+                <option value="50001">Mumbai
+                </option>
+                <option value="50001">Kolkatta
+                </option>
+                <option value="50001">Chennai
+                </option>
+
+            </optgroup>
+        
+            </select>
+    </div>
+    <div>
+        <input type="text" pattern="colou?r" name="test"/>
+    </div>
+</body>
+</html>

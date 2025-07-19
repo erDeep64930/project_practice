@@ -1,0 +1,21 @@
+<script>
+  function login(...loginDetails) {
+    const [userid, password, success, failure] = loginDetails;
+
+    if (userid == "deepak" && password == "deepak5455") {
+      success();
+    } else {
+      failure();
+    }
+  }
+  login(
+    "deepak",
+    "deepak5455",
+    function () {
+      document.write("login success");
+    },
+    function () {
+      document.write("login failure");
+    }
+  );
+</script>

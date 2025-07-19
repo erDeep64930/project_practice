@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lec76</title>
+</head>
+
+<script>
+    class employee{
+        FirstName;
+         LastName;
+         Designation;
+         Print(){
+            document.write(`Name: ${this.FirstName} ${this.LastName} <br> Designation: ${this.Designation} <br>`);
+         }
+    }
+
+    class Developer extends employees
+    {
+        FirstName="raj";
+        LastName="ram";
+        Designation="Developer";
+        Role = "Developer role : to build , debug, test, deploy <br>"
+        print(){
+            super.Print();
+            document.write(this.role);
+        }
+    }
+
+    class Manager extends employees
+    {
+        FirstName="tom";
+        LastName="hanks";
+        Designation="Manager";
+        Role = "manager role : Approval <br>"
+        print(){
+            super.Print();
+            document.write(this.role);
+        }
+    }
+
+    let employees = new Array(new Developer(), new Admin(), new Manager());
+
+    let designation = prompt("enter designation");
+
+    for (var employee of employees){
+        if(employee.Designation==designation){
+            employee.Print();
+        }
+    }
+</script>
+<body>
+    
+</body>
+</html>

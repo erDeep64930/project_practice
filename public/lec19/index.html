@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> WebPage Design</title>
+    <link rel="stylesheet" href="../../node_modules/bootstrap-icons/bootstrap-icons.svg">
+    <style>
+        header{
+            background-color: chocolate;
+            color:white;
+            text-align: center;
+            padding: 5px;
+        }
+        footer{
+            background-color: chocolate;
+            color:white;
+            text-align: center;
+            padding: 5px;
+        }
+        section{
+            height: 400px;
+            display: grid;
+            grid-template-columns: 3fr 9fr;
+            margin-top: 10px;
+        }
+        iframe{
+            width: 100%;
+            height: 375px;
+            border: none;
+        }
+        ul{
+            list-style: none;
+            margin-left: -20px;
+
+        }
+        li {
+            background-color: chocolate;
+            font-size: 20px;
+            padding: 5px;
+            width: 200px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            color: white;
+        }
+        a{
+            color: white;
+            text-decoration: none;
+        }
+        a:hover{
+            cursor: pointer;
+            color: aqua;
+        }
+    </style>
+</head>
+
+<body>
+<header>
+    <h1><span class="bi bi-cart4"></span>Amazon Shoping</h1>
+</header>
+<!-- section -->
+ <section>
+    <nav>
+        <ul>
+            <li><a href="home.html" target="frameBody">Home</a></li>
+            <li><a href="electronics.html" target="frameBody">Electronics</a></li>
+            <li><a href="footwear.html" target="frameBody">Footwear</a></li>
+            <li><a href="fashion.html" target="frameBody">Fashion</a></li>
+        </ul>
+    </nav>
+    <main>
+        <iframe name="frameBody"></iframe>
+    </main>
+ </section>
+ <!-- footer -->
+  <footer>
+    <div>&copy; copyright 2024</div>
+  </footer>
+</body>
+</html>

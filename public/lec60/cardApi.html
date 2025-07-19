@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>lec60</title>
+    <link rel="stylesheet" href="../../node_modules/bootstrap/dist/css/bootstrap.css">
+    <script>
+        function bodyload(){
+            fetch("https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos?sol=1000&api_key=DEMO_KEY").then(function(response){ 
+                return response.json();
+            }).then (function(data){
+                for (var item of data.photos){
+                    var div = document.createElement("div");
+                    div.className="card m-2 p-2";
+                    div.innerHTML = `
+                    <img src=${item.img_src} class="card-img-top" height="150">
+                    <div class="card-header">
+                <h2>${item.id}</h2>
+                    </div>
+
+                    <div class="card-body">
+<dl>
+    <dt>Camera Name</dt>
+    <dd>${item.camera.full_name}</dd>
+    <dt>Rover NAME</dt>
+    <dd>${item.rover.name}</dd>
+</dl>
+                    </div>
+                    `;
+
+                    document.getElementById("dataContainer").appendChild(div);
+                }
+            })
+        }
+    </script>
+</head>
+<body class="container-fluid" onload="bodyload()">
+
+
+    <div class="d-flex flex-wrap" id="dataContainer">
+
+
+    </div>
+    
+</body>
+</html>

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Number to Words Converter</title>
+    <script>
+        function numberToWords(num) {
+            if (num === 0) return "zero";
+
+            const belowTwenty = [
+                "", "one", "two", "three", "four", "five",
+                "six", "seven", "eight", "nine", "ten",
+                "eleven", "twelve", "thirteen", "fourteen",
+                "fifteen", "sixteen", "seventeen", "eighteen", "nineteen"
+            ];
+
+            const tens = [
+                "", "", "twenty", "thirty", "forty", "fifty",
+                "sixty", "seventy", "eighty", "ninety"
+            ];
+
+            const thousands = ["", "thousand", "million"];
+
+            let words = '';
+            let i = 0;
+
+            while (num > 0) {
+                let part = num % 1000;
+                if (part) {
+                    let str = '';
+                    if (part < 20) {
+                        str = belowTwenty[part];
+                    } else {
+                        str = tens[Math.floor(part / 10)];
+                        if (part % 10) {
+                            str += ' ' + belowTwenty[part % 10];
+                        }
+                    }
+                    if (Math.floor(part / 100)) {
+                        str = belowTwenty[Math.floor(part / 100)] + ' hundred' + (str ? ' ' + str : '');
+                    }
+                    words = str + (thousands[i] ? ' ' + thousands[i] : '') + (words ? ' ' + words : '');
+                }
+                num = Math.floor(num / 1000);
+                i++;
+            }
+
+            return words.trim();
+        }
+
+        function convertNumber() {
+            const inputNumber = document.getElementById("numberInput").value;
+            const result = numberToWords(parseInt(inputNumber, 10));
+            document.getElementById("result").innerText = result || "Please enter a valid number.";
+        }
+    </script>
+</head>
+<body>
+    <h1>Number to Words Converter</h1>
+    <input type="number" id="numberInput" placeholder="Enter a number" />
+    <button onclick="convertNumber()">Convert</button>
+    <p id="result"></p>
+</body>
+</html>

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>lec75</title>
+</head>
+<script>
+
+    class BaseClass
+    {
+        print(){
+            document.write(`base class print method<br> `)
+        }
+    }
+
+  class Derived
+  {
+    print(){
+        let obj = new BaseClass();
+        document.write(`derived class print method<br> `)
+    }
+  }
+
+  let obj = new Derived();
+  obj.print(); // derived class print method
+
+  let obj2 = new BaseClass();
+  obj2.print(); // base class print method
+</script>
+<body>
+    
+</body>
+</html>

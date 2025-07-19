@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>lec81</title>
+    <script src="../../node_modules/jquery/dist/jquery.js"></script>
+
+    <script>
+        $(function(){
+            var menu = [
+            {category:"electronics",products:["tv","mobile"]},
+
+            {category:"footwear",products:["shoe","boot"]},
+        ];
+
+        $.each(menu,function(key,item){
+            $(`<li>${item.category}</li>`).appendTo("ol");
+
+            $.each(item.products, function(innerkey,prod){
+                $(`<ul><li></li>${prod}</ul>`).appendTo("ol");
+            })
+        })
+        })
+    </script>
+</head>
+<body>
+    <h2>look at this </h2>
+    <ol></ol>
+</body>
+</html>

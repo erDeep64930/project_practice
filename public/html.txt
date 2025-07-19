@@ -1,0 +1,776 @@
+UI fullStack Web Developer Course Naresh IT
+
+7997993922- naresh it
+ ----------      L-1  ---------
+
+
+       Which fullstack to learn ?
+
+
+1. Full Stack Web Developer Course:
+    HTML, CSS, Bootstrap, JavaScript, Sass, jQuery .
+    Node.js, MongoDB, ExpressJS .
+
+2.Java Full Stack Course    
+    HTML,CSS, Bootstrap,JavaScript,Sass,jQuery
+    Java [Core,Adv,JSP,Spring], oracle
+
+3. .NET Full Stack
+        HTML,CSS, Bootstrap,JavaScript,Sass,jQuery
+        C# ,ASP.NET,MVC,Web API , Sql Server
+
+
+
+MERN VS MEAN Developer:
+
+M -  MongoDB  = Database
+E -  ExpressJS = Middleware
+A/R - AngularJS / React  = Client Side
+N - NodeJS =   - Server Side
+
+
+fullStack :
+     -Frontend
+     -Backend
+
+UI and UX ?
+
+UX: User Experience = [React and AngularJS ,Vue ,BackBone ,Knockout etc..]
+-designer = ux
+
+UI: User Interface
+   HTML,CSS, JS,Bootstrap, jQuery , Photoshop ,Figma 
+
+   Designer - need creativity 
+
+UI developer also called -Frontend /web develper
+
+------------  L-2 ---------
+
+HTML is a presentation language
+
+-What is network ?
+-What is internet ?
+-What is Web?
+     -Tim Berner Lee
+
+     ------ L-3 -------
+What is web ?
+ web is a portion of internet with restricted access
+ HTML is a language for web
+
+
+ What is web Server ?
+
+ Entire software development work on 4 Server
+  --software development:
+    -1. SandBox Server or Golden Server
+    -2. development Server
+    -3. Quality Server
+    -4. Production Server
+-----5. Client Server (Whatever application we build used by user)
+
+
+1.SandBox Server: - it is a server where repository are kept
+
+2.development server :- here it is build here .
+
+3.Quality server :- here it is check here
+
+4. Production server :- application is used here / apps /Project is already running .
+
+
+---------------------
+
+Tier and Layers architecture :-
+
+To build a application we need 
+ 1.Database server
+ -Database {kept on different server} database can be Oracle , MySQL ,MongoDB
+
+2. Application server
+ -application are kept on application server {JSP,PHP,Node.Js}
+
+3.Client server
+ -client is kept on client server {user /Client}
+
+
+Application run on three tier 
+ - Web application run on 3 tier 
+
+ {UI Developer work on User/Client server} html,css,js,angular,React
+
+ Application are build on Layers
+  -UI layer = designing {user interface}
+  -Business layer = Logic {communication}
+  -Database layer = database
+
+  how to create a resume 
+   Project-A:2019-2020
+   architecture: 3 tier application
+   my role : UI layer
+
+   Full Stack Developer work on 
+     -UI layer = HTML ,CSS,JS,
+     -Business = node js , ExpressJS ,API, Services
+     -Data Layers = MongoDB,MySQL
+
+     application are kept on Server
+
+     Web Server 
+       -Local Web Server {install on pc}
+       -Cloud server eg:-{firebase,mongo,aws,azure}
+
+Address : http://127.0.0.1
+Address : http://localhost:8080
+
+website V/S web application 
+
+Website:- it is virtual directory that provide access to the resources on server
+ site= location = drive/directory
+ web= location on server
+
+-------------L-4 -------------
+website V/S web application
+
+website= static resources / no interaction
+Web Application =static + dynamic resources / interaction eg netflix , amazon
+
+Blog:- web log= blog web information
+
+Vlog - eg: Youtube channel  journal on internet
+
+wiki : mean quick google map because you can update the images .
+
+Podcast :
+
+pod : multimedia broad cast = [audio /video]= ipod
+
+Widget: gadget for website or application : weather report /currency convertor
+
+Web Debugger/ Developer tool  : find the bug and fix it : eg - fiddler, Postman , Swagger
+
+set up environment:
+====================
+
+1.download and install = node js 
+ cmd : node -V
+ cmd:npm -V
+
+2. Code editor 
+IDE = INTEGRATED development environment
+eg:vs code editor
+ download extension
+  - live server ,  
+
+-----------L-5------------
+------------------------
+
+=========GIT CONCEPT==========
+
+Git is an application which needs to be download and install, which is used to track version.. it is a version control system
+https://git-scm.com/downloads
+windows>64-bit
+after installing check git -v
+"https://github.com/prasad-bigdp/angular-11"
+Github is just a online code storage like gdrive. u can also use bitbucket,gitlab,aws.
+
+step1:  download git from https://git-scm.com/downloads and install it and check the version by "git -v" in cmd
+step2: create github account
+step3: go to visual studio code and login into github
+step4: setup configs in vscode
+git config --global user.email "youremail" 
+git config --global user.name "username" 
+
+steps:
+1:git init
+2. git add .
+3. git commit -m "update"
+4. git remote add origin "link"
+5. git push -u origin main
+
+==========GIT CONCEPT end here==========
+
+
+
+create a new web application
+
+create a folder in pc avoid on desktop
+terminal in vs code = [ctrl +`]
+if your terminal open with powershell then switch to cmd
+
+type the following command :
+
+ [npm init -y]
+  npm= node package manager 
+  init = initialization of project
+  -y = accept all the project meta data
+
+this will generate a new file called package.json
+
+package.json comprises of information about the project 
+ 
+ public = it is a repository of static resources [.html,.txt,.pdf,images]
+ src = it is a source of dynamic resources [.css, .scss, .ts]
+
+- add index.html to public folder
+
+memory :
+ static - continious memory
+ dynamic - discreet memory
+
+----------L-6-------
+static page extension - .html, .htm , {same information}
+dynamic page - .jsp,.php,.aspx, { information change}
+
+
+          HTML
+        -------
+markup language - preparing content for presentation
+html is not a programming language it is a presentation language
+
+Step1:GML is 1st markup language , developed by currency
+Step2:SGML Standard generic markup language , develop by IETF [Internet Engineering task force]
+Step3: Whatwg and w3c started the evolution of HTML
+
+Latest version of HTML is HTML5
+
+
+HTML4 V/s HTML5
+
+ 
+html are collection of elements that are arranged in DOM [document object module]
+
+html rendering are done in [browser engine]
+
+
+bytes=>charecter=>tokens=>nodes=>dom=>rendering=>=>layout=>paint
+
+html elements are classified as following:-
+
+1.normal elements
+2.void elements
+3.rc data elements
+4.raw text elements
+5.foreign elements
+
+1.Normal element :-  it return the presentation on callback , -it will not show  the presentation  eg.: <b></b> , 
+- it require the start tag and end tag.
+
+2.void element :- it does not return the presentation on callback , it require additional attributes ,- it does'nt require the end elements
+eg:-<img src="" alt="" width="100" height="100"/>,<link />
+- this are also called self ending elements.
+
+
+3.Rich content data elements:-
+ -will not allow any another element with in the context.
+ -it is only for the plain text eg:-<textarea>
+
+
+4. Raw text elements:-
+ -no tag require
+ eg:
+copyright symbol using code syntax &copy; &#8377;
+
+5. foreign elements:-
+eg:-Canvas,SVG,MathML,
+
+       ----------L-7------------
+
+
+HTML file extension 
+.html,
+.htm
+both are same.
+[html pages can be created with ms word , ms excel]
+use only .html
+
+structure of html :
+
+1.document declaration 
+
+<!DOCTYPE html> -it indicate that we are using the html5
+
+2.document scope
+<html></html>
+it specify the start and end of document 
+
+document attribute <html lang-"en-in"></html>
+-html everything is called attribute
+
+
+--------L-8---------
+
+creating favicon 
+
+go to project folder "public folder" and add folder assets name this as favicon.ico 
+favicon icon must be 16*16 pixel 32*32 
+
+web page must be 1200*720
+
+open your favicon in ms-paint 
+
+<link>
+ 
+ rel- it specify the file type stylesheet for css or shortcut icon for favicon 
+
+ href-it is hyper reference virtual path of file 
+
+ # difference b/w href and src 
+
+  src- it is used to get the path and display the file 
+
+  href - it is setter ,it is used to set the path and access the file .
+
+
+<meta charset="utf-8">
+
+UTF-UNICODE TRANSFORMATION FORMAT -it is used by bot to know the language used in page
+
+8 bit- english
+16bit korean ,japanese
+32 bit - chinese , arabic
+
+meta -charset 
+     -name=keyword content=""
+     -name="description" content=""
+     http-equiv request headers
+    veiwport 
+
+  <meta http-equiv="refresh" content="4"> -this will update the page every 4 second this is generally used in cricbuzz /realtime data update to refresh the page 
+
+meta view port is used for responsive page 
+
+html color 
+- you can define the html color using :-
+  a) color name eg: <body bgcolor="red"></body>
+  b) hex code : #RRGGBB
+      R- red
+      G-green
+      B- blue
+
+color value will be -(0-9),a,b,c,d,e,f
+ 0=dark
+ f=light
+
+ background :it set the background images
+
+ align : it set the alignments
+ margin 
+
+ alink-active link
+ vlink -visited link
+
+----------L-9 COMPLETED-------
+
+html4 body are design by table -earlier 
+
+-html4 is not SEO friendly
+-HTML5 has introduced semantic element 
+ to make html page more SEO friendly
+
+ eg:- aside,article, dialog,figure,figcaption, header,footer,section,main,div,span,nav,
+ menu etc.
+
+
+ div - indicate the block element . ie., loading the content 100%
+ span- it indicate the inline element . ie., loading the content line by line
+
+
+#
+nav div {
+  - this mean that all elements in the nav 
+}
+
+
+---------L-11 has been ended----------
+
+what is the differnece b/w <br>, </br>
+
+<br> is valid line break 
+</br> is self ending [void] and invalid
+browser only understand only <br> 
+avoid using </br> 
+
+1).<pre>tag - this tag print as you write</pre>
+2).<code>this is for code for display </code>
+
+NOTE:
+-don't use heading for highlight the text or content in a paragraph
+-don't use lots of heading in one page .this will spam your page.
+
+use limited number of heading for  SEO 
+
+Q. without heading can we define the heading style ?
+-yes , but they are not SEO friendly and we can change the style and font with the css .
+
+SEO-can summarise the page content so use wisely
+heading is define with align attribute .
+
+
+-----------L-12  has been ended------------
+
+
+data terms and defination
+
+shadow for container :-
+
+div{
+  box-shadow : horizontal vertical blur color;
+}
+-box shadow cant be applied to text 
+-for text -use text-shadow
+
+
+-------L-13 has been ended----------
+
+NOTE:-Always use camelcase for naming
+
+lowerUppercase
+
+prefix-which component you are referring
+suffix- for what purpose
+
+eg:-
+paraMessage
+txtPassword
+
+ ol {
+  display:flex;
+ }
+ ol{
+  display:grid;
+  grid-template-columns:6fr 6fr;
+ }
+
+ #bootstrap icon
+ npm i bootstrap-icons --save
+
+
+---------L-14 end---------
+
+text effect in html
+
+-font  [face,size,color]
+-font style [bold ,italic]
+-font effect [underline,strike ,super script, subscript]
+
+face= font name [Arial , times new roman]
+
+Q. what are web safe fonts?
+serif,sans-serif,monospace
+
+Q. what is difference b/w bold and strong ?
+   document have 2 mode 
+     -Design mode [<b></b>,<em></em>,<u></u>,<del></del>]
+     -Review mode [<strong></strong>,<ins></ins>,<strike></strike>]
+
+
+
+how to handle images
+
+what are the images supported type:
+ -APNG- ANIMATED PORTABLE NETWORK GRAPHICS
+ -PNG- PORTABLE NETWorK GRAPHICS
+ -JPG-JOINT PHOTO GRAPHIC EXPERT GROUP 
+ -BMP-BITMAP
+ SVG- SCALAR VECTOR GRAPHIC
+ WEBP- WEB PICTURE 
+
+
+ PNG,APNG-hd,hr,more pixel depth not for website  because occupy more space.
+
+ jpg-hd,hr compressed image  
+
+ gif -low resolution less color [256 color]
+ gif can have ANIMATED
+
+ SVG - vector GRAPHIC xml based image [on zooming photo quality increases]
+xml can flow through firewall ie., not effected by virus .
+
+vector based- google map 
+
+-----l-15 has been ended--------
+
+<img> is used to embed the image 
+-it is a void element 
+<img alt="" src="">
+
+alt= alternate text to display when image fail to load 
+
+src= it define the image path 
+
+% make image responsive 
+
+Q. what is fluid image ?
+image that can adjust a/to browser .you can define by using %
+
+<img src="" alt="" title="" align="" decoding="" crossorigin="anonymous" importance="">
+
+decoding -auto/sync/async
+
+importance -low/high/auto
+
+-----l-16 end here-----
+
+link in html
+
+-link are clickable text , picture or graphic that are navigate the user
+
+
+sitemap - provide the basic information about the link and navigation links.
+
+ link uses href to set the target
+
+ eg:- 
+ step1: define id
+ <h2 id="footwear"></h2>
+ <ol id="offer"></ol>
+
+step2:
+<a href="#footwear">Footwear</a>
+<a href="$offer">Offer</a>
+
+Q. how to target any reference within the page with style?
+-by using ":target" selector
+
+
+----l-17 end here-------
+
+
+-inter document link [one page to another]
+-Intra document link [within the page ]
+
+
+Q. how to link a document which will download always ?
+- by using "download" attribute 
+
+<a href="" download="any name"> </a>
+
+Q.how to open a linked document in new tab ?
+"target=_blank"
+
+Q. how to open a linked document in a new window?
+-using JavaScript ="window.open"
+
+<a href="javascript:window.open('shoe.jpg)"></a>
+
+Q. how to close a linked document in same page embedded at specific page?
+-<iframe name="frameBody"> </iframe>
+
+Q.how to create a link for email , phone ?
+-link uses href- 
+             mailto- for mailto
+             tel - phone
+             javascript - for executing javascript function  
+
+
+--------L-18 end here--------
+
+  iframe can use a default source by using src attribute.
+
+  <iframe src=""></iframe>
+
+
+frame can be nested  using rows and columns but today they are not supported in browsers.
+
+
+------L-19 END HERE--------
+
+TABLE in HTML 
+
+-earlier table are used to design the website but not today.
+
+ #table attribute 
+
+ -frame,rules and border
+ frame -it define for entire table
+ <table frame="box|rhs|lhs|above|below|void"></table>
+
+ rules -define for row and column
+<table rules="rows|cols|groups|none|all"></table>
+
+-border-define for cell. 
+  0-false 
+  1-true 
+
+-cellspacing 
+-cellpadding 
+
+---------L-20 END HERE----------
+
+------l-21-left intensionally-----
+
+
+Forms in html:-
+
+form -UI interaction take place 
+
+
+
+get - fetch data 
+post - submit data
+put - modify all details
+patch - partial modify
+delete - delete details
+
+Q. can we submit data on data on GET requests?
+-yes, but not recommended
+
+Q.difference b/w get and post ?
+- GET - it submit data to server.
+     - it append data into url as query string 
+     - it can viewed by the user 
+     - it is not safe
+     - any one can hack your data 
+     -data is appended[added] to url .
+     hence you can't submit complex data.
+
+
+- POST -it submit data to the server.
+       - data is submitted as form body.
+       -it is not appended into url
+       -it is safe
+       -it is not in browser 
+       -it can complex data 
+       
+
+Q.where data is present when submitted on get request ?
+-Query string 
+
+
+action -target page where data is submitted to [.jsp,.aspx,.php,.asp]
+
+-noValidate
+HTML5 introduce form validation.only work in html 
+
+form element -
+ -textbox
+ -Password
+ -checkbox 
+ -radio button 
+ -dropdown 
+ -list 
+ -textarea 
+ -progress 
+ -button 
+
+------L-22 end here -------
+
+#textbox
+ -it allow to view input and edit text 
+ -it allow string [charecter,string,special charecter]
+
+ ##--"name" it is needed to submitted its value .
+
+ ##"value" it indicate a value to display in textbox .[default text]
+
+ ##placeholder -it indicate the watermark in the textbox 
+
+use either = value/placeholder
+
+#readOnly/disable 
+#autofocus
+#size
+#maxlength
+#required
+#pattern
+
+------l-23 end here---
+
+<input type="password" >
+
+#password input
+#number input -only number
+#stepValue
+
+-DateInput-[date picker to select the date]
+
+<input type="datetime" />
+dateTime---this is no longer in use 
+since no browser supports
+
+range picker are not supported in html for its use we use javascript
+
+-always date format should be yy-mm-dd 
+
+
+#file input - it use to select the file
+
+
+-----l-24,25, end here -----
+
+<select>
+<option value="50001">Hydrabad
+</option>
+<option value="50002">Delhi
+</option>
+<option value="50003">Mumbai
+</option>
+<option value="50004">Kolkatta
+</option>
+</select>
+
+
+#list box is similar to dropdown
+
+<select>
+<optgroup>
+<option></option>
+</optgroup>
+</select>
+
+
+
+#progress bar 
+
+-are rarely used they are placed by spinner 
+-they are control dynamically.
+
+
+
+------l-27-------
+
+Regular expression:-
+  - are made by -[1.meta charecter, 2.quantifiers]
+
+1.meta charecter -
+
+1.? = zero or one occurrence charecter .
+
+syntax:
+<input type="text" pattern="colou?r" name="test"/>
+
+2. + =>many times or one occurrence charecter
+
+
+---------L-30 start here---------
+
+#multimedia 
+
+  -Animation
+  -audio
+  -video
+
+#Marquee: it is usd for creating sliding and scrolling content
+Now they are not in used .
+
+scroll amout - how you want to control  scroll .
+
+behavior - scroll behavior.
+
+Keyframe we design the Animation .
+
+<marquee onmouseover="this.stop()" onmousout="this.start()">
+</marquee>
+
+
+<video></video>
+<audio></audio>
+<embed></embed>
+
+
+---------l-30 end here------
+
+
+

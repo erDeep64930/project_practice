@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>lec-58</title>
+    <link rel="stylesheet" href="../../node_modules/bootstrap/dist/css/bootstrap.css">
+</head>
+
+<script>
+    var cities = ["delhi","hydrabad"];
+
+    function bodyload(){
+        loadCities();  // call function to load cities on page load.
+    }
+
+    function loadCities(){
+        document.getElementById("lstCities").innerHTML = ""; // clear existing options before adding new ones.
+        // loop through cities array and create and append options to select element.
+       for (var city of cities ){
+        var option = document.createElement("option");
+        option.text = city;
+        document.getElementById("lstCities").appendChild(option);
+       }
+    }
+
+    function addClick(){
+        var cityname = document.getElementById("txtCity").value;
+
+        var cityIndex = cities.indexOf(cityname);
+
+        if(cityIndex==-1){
+            cities.push(cityname);
+            alert(`${cityname} added to the list `);
+            loadCities();  // call function to load cities after adding a new city.
+            document.getElementById("txtCity").value = "";  // clear text input after adding city.
+    
+
+        }else {
+            alert ("city exist")
+        }
+
+       
+
+        
+    }
+    function removeClick(){
+        var selectedCityName = document.getElementById("lstCities").value;
+
+        var selectedCityIndex = cities.indexOf(selectedCityName);
+
+        cities.splice(selectedCityIndex, 1);
+        loadCities();
+    }
+
+</script>
+
+
+
+<body class="container-fluid" onload="bodyload()">
+    <h2 class="bg-black text-bg-light text-white text-center p-2 mt-2">Array manipulation</h2>
+<div class="row">
+    <div class="col-3">
+        <fieldset>
+            <legend>Add new city</legend>
+            <div class="input-group">
+                <input type="text" id="txtCity" placeholder="Enter city name" required class="form-control">
+                <button onclick="addClick()" class="btn btn-primary">Add City name</button>
+            </div>
+           
+        </fieldset>
+    </div>
+
+    <div class="col-9">
+        <h3>Cities list</h3>
+        <div class="input-group">
+            <select class="form-select" id="lstCities">
+           
+            </select>
+            <button class="btn btn-danger" onclick="removeClick()">Remove city</button>
+        </div>
+        
+    </div>
+    
+
+</div>
+ 
+</body>
+</html>

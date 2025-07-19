@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>lec59</title>
+    <link rel="stylesheet" href="../../node_modules/bootstrap/dist/css/bootstrap.css">
+</head>
+<script>
+    var data = [
+    {category:"electronics", product:["tv","mobile"]},
+    {category:"footwear", product:["nike casual","lee boot"]}
+    ]
+
+    function bodyload(){
+for (var item of data){
+    var li  = document.createElement("li");
+    li.innerHTML = item.category;
+    for (var product of item.product){
+        var ul = document.createElement("ul");
+        var innerLi = document.createElement("li");
+        innerLi.innerHTML = product;
+        innerLi.appendChild(innerLi);
+        li.appendChild(ul);
+        document.querySelector("ol").appendChild("li");
+    }
+}
+    }
+
+</script>
+<body onload="bodyload()">
+    <h2>Multi level iteration</h2>
+    <div>
+<ol>
+
+</ol>
+    </div>
+    
+</body>
+</html>

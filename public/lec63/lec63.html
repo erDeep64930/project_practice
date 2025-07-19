@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>lec63</title>
+</head>
+<script>
+
+    function SubmitClick(){
+        var n = document.getElementById("txtEven").value;
+
+        var msg = document.getElementById("msg");
+
+        if(parseInt(n)%2==0){
+            msg.innerHTML = "Number is even".bold().fontcolor('green').italics();
+        }else {
+            msg.innerHTML = "Number is odd".bold().fontcolor('red').italics();
+        }
+    }
+</script>
+<body>
+    <h2>Enter a even number</h2>
+    <input type="text" id="txtEven" required>
+<br>
+<button onclick="SubmitClick()">Submit</button>
+<br>
+<div>
+    <p id="msg"></p>
+</div>
+    
+</body>
+</html>

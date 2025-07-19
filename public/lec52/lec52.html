@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>L-52</title>
+</head>
+<body>
+    <dl>
+        <dt>Select the age :-</dt>
+        <dd>
+            <select id="lstAge">
+                <option value="18">18</option>
+                <option value="21">21</option>
+                <option value="25">25</option>
+                <option value="28">28</option>
+            </select>
+        </dd>
+        <button onclick="  submitClick()">Submit</button>
+    </dl>
+    <script>
+        function submitClick(){
+            var age = document.getElementById("lstAge").value;
+            document.write("you are currently" + (parseInt(age)+1))
+        }
+    </script>
+</body>
+</html>

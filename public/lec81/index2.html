@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lec-81</title>
+    <script src="../../node_modules/jquery/dist/jquery.js"></script>
+    <script>
+        $(function(){
+            $("#btnInsert").click(function(e){
+                document.write(`
+                X: ${e.clientX} <br>
+
+                Y:${e.clientY} <br>
+                `)
+            })
+        })
+    </script>
+</head>
+<body>
+   <button id="btnInsert">Insert</button> 
+</body>
+</html>

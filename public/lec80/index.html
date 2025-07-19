@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>lec-80</title>
+    <script>
+        function GetTopic(){
+            var topic = location.hash;
+            switch(topic){
+                case "#html":
+                var now = new Date();
+                console.log(`you are in html : ${now.toString()}`);
+                break;
+
+                case "#css":
+                var now = new Date();
+                console.log(`you are in css : ${now.toString()}`);
+                break;
+
+            }
+        }
+    </script>
+</head>
+<body>
+    <button onclick="GetTopic()">Get Previous Topic</button>
+
+    <div><a href="#html">HTML</a>
+    <span>|</span><a href="#css">CSS</a>
+</div>
+
+<h2 id="html">HTML</h2>
+<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Illo, officiis neque odio exercitationem eveniet sequi enim amet maxime, aliquam tenetur rerum itaque beatae fugit consequuntur iste. Repellendus veniam nihil non saepe odio id voluptates, neque quidem dignissimos, architecto repellat sequi corrupti cumque, earum tenetur itaque dicta magni. Illo nihil iste autem tenetur necessitatibus ad, animi doloremque neque odit itaque, qui distinctio fugiat impedit voluptates explicabo. Natus iste, atque deleniti numquam modi minima nemo optio deserunt aspernatur harum, distinctio repudiandae quas?</p>
+
+<h2 id="css">CSS</h2>
+<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eum obcaecati sapiente neque mollitia veritatis. Suscipit iure, ullam aut asperiores eveniet distinctio incidunt voluptates sed cupiditate eum dicta quisquam veritatis quos repudiandae odit quia obcaecati dolores quasi. Consectetur, suscipit veniam consequatur quis necessitatibus atque sequi iure tenetur saepe corrupti illum molestiae reiciendis esse rerum? Et sit consectetur corrupti debitis voluptatem, nobis totam quo veniam quibusdam officiis rerum illum quis nemo illo distinctio voluptas? Voluptate inventore tenetur nostrum sit veritatis fugiat pariatur?</p>
+</body>
+</html>

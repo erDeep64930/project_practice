@@ -1,0 +1,11 @@
+          Backend:-
+
+
+          MongoDb = database =
+          node js = server side scripting ;
+
+          express = middleware;
+
+mongo db:-
+
+-to store data.
