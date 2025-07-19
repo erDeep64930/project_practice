@@ -1,0 +1,2120 @@
+// App.js
+// This is the main React component that sets up the application structure,
+// handles routing, and manages global authentication state.
+
+import React, { useState, useEffect, createContext, useContext } from 'react';
+import './index.css'; // Tailwind CSS will be imported via this file
+
+// Context for authentication
+const AuthContext = createContext(null);
+
+// Custom Hook for Auth
+const useAuth = () => {
+    return useContext(AuthContext);
+};
+
+// --- Components ---
+
+// Header Component
+const Header = () => {
+    const { user, logout } = useAuth();
+    const [activeTab, setActiveTab] = useState('home'); // State for active tab
+
+    const handleTabClick = (tabName) => {
+        setActiveTab(tabName);
+        // This will trigger the route change in App.js
+        window.location.hash = `#/${tabName}`;
+    };
+
+    return (
+        <header className="bg-gradient-to-r from-purple-600 to-indigo-800 text-white p-4 shadow-lg rounded-b-lg">
+            <div className="container mx-auto flex justify-between items-center">
+                <h1 className="text-3xl font-bold font-inter cursor-pointer" onClick={() => handleTabClick('home')}>
+                    EduSphere
+                </h1>
+                <nav>
+                    <ul className="flex space-x-6">
+                        <li>
+                            <button
+                                onClick={() => handleTabClick('home')}
+                                className={`text-lg font-medium hover:text-purple-200 transition duration-300 ${activeTab === 'home' ? 'border-b-2 border-white' : ''}`}
+                            >
+                                Home
+                            </button>
+                        </li>
+                        <li>
+                            <button
+                                onClick={() => handleTabClick('books')}
+                                className={`text-lg font-medium hover:text-purple-200 transition duration-300 ${activeTab === 'books' ? 'border-b-2 border-white' : ''}`}
+                            >
+                                Books
+                            </button>
+                        </li>
+                        <li>
+                            <button
+                                onClick={() => handleTabClick('quizzes')}
+                                className={`text-lg font-medium hover:text-purple-200 transition duration-300 ${activeTab === 'quizzes' ? 'border-b-2 border-white' : ''}`}
+                            >
+                                Quizzes
+                            </button>
+                        </li>
+                        {user ? (
+                            <>
+                                {user.role === 'instructor' && (
+                                    <li>
+                                        <button
+                                            onClick={() => handleTabClick('instructor-dashboard')}
+                                            className={`text-lg font-medium hover:text-purple-200 transition duration-300 ${activeTab === 'instructor-dashboard' ? 'border-b-2 border-white' : ''}`}
+                                        >
+                                            Instructor Dashboard
+                                        </button>
+                                    </li>
+                                )}
+                                {user.role === 'student' && (
+                                    <li>
+                                        <button
+                                            onClick={() => handleTabClick('my-courses')}
+                                            className={`text-lg font-medium hover:text-purple-200 transition duration-300 ${activeTab === 'my-courses' ? 'border-b-2 border-white' : ''}`}
+                                        >
+                                            My Courses
+                                        </button>
+                                    </li>
+                                )}
+                                <li>
+                                    <button
+                                        onClick={() => handleTabClick('profile')}
+                                        className={`text-lg font-medium hover:text-purple-200 transition duration-300 ${activeTab === 'profile' ? 'border-b-2 border-white' : ''}`}
+                                    >
+                                        Profile ({user.username})
+                                    </button>
+                                </li>
+                                <li>
+                                    <button
+                                        onClick={logout}
+                                        className="text-lg font-medium bg-red-500 hover:bg-red-600 px-4 py-2 rounded-md transition duration-300"
+                                    >
+                                        Logout
+                                    </button>
+                                </li>
+                            </>
+                        ) : (
+                            <>
+                                <li>
+                                    <button
+                                        onClick={() => handleTabClick('login')}
+                                        className={`text-lg font-medium hover:text-purple-200 transition duration-300 ${activeTab === 'login' ? 'border-b-2 border-white' : ''}`}
+                                    >
+                                        Login
+                                    </button>
+                                </li>
+                                <li>
+                                    <button
+                                        onClick={() => handleTabClick('register')}
+                                        className={`text-lg font-medium hover:text-purple-200 transition duration-300 ${activeTab === 'register' ? 'border-b-2 border-white' : ''}`}
+                                    >
+                                        Register
+                                    </button>
+                                </li>
+                            </>
+                        )}
+                    </ul>
+                </nav>
+            </div>
+        </header>
+    );
+};
+
+// Footer Component
+const Footer = () => {
+    return (
+        <footer className="bg-gray-800 text-white p-4 mt-8 rounded-t-lg shadow-inner">
+            <div className="container mx-auto text-center text-sm">
+                &copy; {new Date().getFullYear()} EduSphere. All rights reserved.
+            </div>
+        </footer>
+    );
+};
+
+// Login Component
+const Login = () => {
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [message, setMessage] = useState('');
+    const { login } = useAuth();
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setMessage('');
+        try {
+            await login(email, password);
+            setMessage('Login successful!');
+            window.location.hash = '#/home'; // Redirect to home after login
+        } catch (error) {
+            setMessage(error.message || 'Login failed. Please check your credentials.');
+        }
+    };
+
+    return (
+        <div className="flex justify-center items-center min-h-[calc(100vh-160px)]">
+            <form onSubmit={handleSubmit} className="bg-white p-8 rounded-lg shadow-xl w-full max-w-md border border-gray-200">
+                <h2 className="text-3xl font-bold mb-6 text-center text-purple-700">Login</h2>
+                {message && <p className={`mb-4 text-center ${message.includes('successful') ? 'text-green-600' : 'text-red-600'}`}>{message}</p>}
+                <div className="mb-4">
+                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
+                        Email
+                    </label>
+                    <input
+                        type="email"
+                        id="email"
+                        className="shadow appearance-none border rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition duration-200"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        required
+                    />
+                </div>
+                <div className="mb-6">
+                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">
+                        Password
+                    </label>
+                    <input
+                        type="password"
+                        id="password"
+                        className="shadow appearance-none border rounded-lg w-full py-3 px-4 text-gray-700 mb-3 leading-tight focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition duration-200"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        required
+                    />
+                </div>
+                <div className="flex items-center justify-between">
+                    <button
+                        type="submit"
+                        className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-6 rounded-lg focus:outline-none focus:shadow-outline transition duration-300 transform hover:scale-105 w-full"
+                    >
+                        Sign In
+                    </button>
+                </div>
+                <p className="text-center text-gray-600 text-sm mt-4">
+                    Don't have an account?{' '}
+                    <button
+                        type="button"
+                        onClick={() => window.location.hash = '#/register'}
+                        className="text-purple-600 hover:text-purple-800 font-bold"
+                    >
+                        Register here
+                    </button>
+                </p>
+            </form>
+        </div>
+    );
+};
+
+// Register Component
+const Register = () => {
+    const [username, setUsername] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [role, setRole] = useState('student');
+    const [message, setMessage] = useState('');
+    const { login } = useAuth(); // Use login to automatically log in after registration
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setMessage('');
+        try {
+            const response = await fetch('http://localhost:5000/api/auth/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, email, password, role }),
+            });
+            const data = await response.json();
+
+            if (response.ok) {
+                setMessage('Registration successful! Logging in...');
+                await login(email, password); // Automatically log in the user
+                window.location.hash = '#/home';
+            } else {
+                setMessage(data.message || 'Registration failed.');
+            }
+        } catch (error) {
+            console.error('Registration error:', error);
+            setMessage('Network error. Please try again.');
+        }
+    };
+
+    return (
+        <div className="flex justify-center items-center min-h-[calc(100vh-160px)]">
+            <form onSubmit={handleSubmit} className="bg-white p-8 rounded-lg shadow-xl w-full max-w-md border border-gray-200">
+                <h2 className="text-3xl font-bold mb-6 text-center text-purple-700">Register</h2>
+                {message && <p className={`mb-4 text-center ${message.includes('successful') ? 'text-green-600' : 'text-red-600'}`}>{message}</p>}
+                <div className="mb-4">
+                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="username">
+                        Username
+                    </label>
+                    <input
+                        type="text"
+                        id="username"
+                        className="shadow appearance-none border rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition duration-200"
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}
+                        required
+                    />
+                </div>
+                <div className="mb-4">
+                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
+                        Email
+                    </label>
+                    <input
+                        type="email"
+                        id="email"
+                        className="shadow appearance-none border rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition duration-200"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        required
+                    />
+                </div>
+                <div className="mb-4">
+                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">
+                        Password
+                    </label>
+                    <input
+                        type="password"
+                        id="password"
+                        className="shadow appearance-none border rounded-lg w-full py-3 px-4 text-gray-700 mb-3 leading-tight focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition duration-200"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        required
+                    />
+                </div>
+                <div className="mb-6">
+                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="role">
+                        Register as
+                    </label>
+                    <select
+                        id="role"
+                        className="shadow appearance-none border rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition duration-200"
+                        value={role}
+                        onChange={(e) => setRole(e.target.value)}
+                    >
+                        <option value="student">Student</option>
+                        <option value="instructor">Instructor</option>
+                    </select>
+                </div>
+                <div className="flex items-center justify-between">
+                    <button
+                        type="submit"
+                        className="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg focus:outline-none focus:shadow-outline transition duration-300 transform hover:scale-105 w-full"
+                    >
+                        Register
+                    </button>
+                </div>
+                <p className="text-center text-gray-600 text-sm mt-4">
+                    Already have an account?{' '}
+                    <button
+                        type="button"
+                        onClick={() => window.location.hash = '#/login'}
+                        className="text-purple-600 hover:text-purple-800 font-bold"
+                    >
+                        Login here
+                    </button>
+                </p>
+            </form>
+        </div>
+    );
+};
+
+// CourseList Component
+const CourseList = () => {
+    const [courses, setCourses] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        const fetchCourses = async () => {
+            try {
+                const response = await fetch('http://localhost:5000/api/courses');
+                if (!response.ok) {
+                    throw new Error('Failed to fetch courses');
+                }
+                const data = await response.json();
+                setCourses(data);
+            } catch (err) {
+                setError(err.message);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchCourses();
+    }, []);
+
+    if (loading) return <div className="text-center text-xl mt-8">Loading courses...</div>;
+    if (error) return <div className="text-center text-xl text-red-600 mt-8">Error: {error}</div>;
+
+    return (
+        <div className="container mx-auto px-4 py-8">
+            <h2 className="text-4xl font-extrabold text-center text-gray-800 mb-10">Explore Our Courses</h2>
+            {courses.length === 0 ? (
+                <p className="text-center text-gray-600 text-lg">No courses available yet. Check back later!</p>
+            ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    {courses.map((course) => (
+                        <div key={course._id} className="bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-200">
+                            <img
+                                src={course.thumbnail}
+                                alt={course.title}
+                                className="w-full h-48 object-cover object-center rounded-t-xl"
+                                onError={(e) => { e.target.onerror = null; e.target.src = 'https://placehold.co/600x400/E0E0E0/000000?text=Course+Thumbnail'; }}
+                            />
+                            <div className="p-6">
+                                <h3 className="text-2xl font-bold text-gray-900 mb-2">{course.title}</h3>
+                                <p className="text-gray-600 text-sm mb-4 line-clamp-3">{course.description}</p>
+                                <div className="flex justify-between items-center mb-4">
+                                    <span className="text-purple-700 font-semibold text-lg">${course.price}</span>
+                                    <span className="text-gray-500 text-sm">Category: {course.category}</span>
+                                </div>
+                                <p className="text-gray-700 text-sm mb-4">Instructor: {course.instructor.username}</p>
+                                <button
+                                    onClick={() => window.location.hash = `#/course/${course._id}`}
+                                    className="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-6 rounded-lg transition duration-300 transform hover:scale-105 shadow-md"
+                                >
+                                    View Course
+                                </button>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            )}
+        </div>
+    );
+};
+
+// CourseDetail Component
+const CourseDetail = ({ courseId }) => {
+    const [course, setCourse] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [reviews, setReviews] = useState([]);
+    const [showReviewForm, setShowReviewForm] = useState(false);
+    const { user, token } = useAuth();
+
+    useEffect(() => {
+        const fetchCourseAndReviews = async () => {
+            try {
+                // Fetch course details
+                const courseResponse = await fetch(`http://localhost:5000/api/courses/${courseId}`);
+                if (!courseResponse.ok) {
+                    throw new Error('Failed to fetch course details');
+                }
+                const courseData = await courseResponse.json();
+                setCourse(courseData);
+
+                // Fetch reviews for the course
+                const reviewsResponse = await fetch(`http://localhost:5000/api/reviews/${courseId}`);
+                if (!reviewsResponse.ok) {
+                    throw new Error('Failed to fetch reviews');
+                }
+                const reviewsData = await reviewsResponse.json();
+                setReviews(reviewsData);
+
+            } catch (err) {
+                setError(err.message);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchCourseAndReviews();
+    }, [courseId]);
+
+    const handleEnroll = async () => {
+        if (!user || !token) {
+            alert('Please login to enroll in a course.'); // Using alert for simplicity, replace with modal
+            return;
+        }
+        try {
+            const response = await fetch('http://localhost:5000/api/enrollments', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ courseId })
+            });
+            const data = await response.json();
+            if (response.ok) {
+                alert('Successfully enrolled in the course!'); // Using alert for simplicity
+                window.location.hash = '#/my-courses'; // Redirect to my courses
+            } else {
+                alert(data.message || 'Failed to enroll.'); // Using alert for simplicity
+            }
+        } catch (err) {
+            console.error('Enrollment error:', err);
+            alert('Network error during enrollment.'); // Using alert for simplicity
+        }
+    };
+
+    const handleReviewSubmitted = (newReview) => {
+        setReviews([...reviews, newReview]);
+        setShowReviewForm(false);
+    };
+
+    if (loading) return <div className="text-center text-xl mt-8">Loading course details...</div>;
+    if (error) return <div className="text-center text-xl text-red-600 mt-8">Error: {error}</div>;
+    if (!course) return <div className="text-center text-xl mt-8">Course not found.</div>;
+
+    return (
+        <div className="container mx-auto px-4 py-8">
+            <div className="bg-white rounded-xl shadow-lg p-8 mb-8 border border-gray-200">
+                <h2 className="text-4xl font-extrabold text-gray-900 mb-4">{course.title}</h2>
+                <p className="text-gray-700 text-lg mb-6">{course.description}</p>
+                <div className="flex items-center justify-between mb-6 border-b pb-4">
+                    <span className="text-purple-700 font-bold text-3xl">${course.price}</span>
+                    <span className="text-gray-600 text-md">Instructor: {course.instructor.username}</span>
+                    <span className="text-gray-600 text-md">Category: {course.category}</span>
+                </div>
+
+                {user && user.role === 'student' && (
+                    <button
+                        onClick={handleEnroll}
+                        className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg transition duration-300 transform hover:scale-105 shadow-md mb-8"
+                    >
+                        Enroll Now
+                    </button>
+                )}
+
+                <h3 className="text-3xl font-bold text-gray-800 mb-6">Course Content</h3>
+                {course.sections && course.sections.length > 0 ? (
+                    <div className="space-y-4">
+                        {course.sections.sort((a, b) => a.order - b.order).map((section) => (
+                            <div key={section._id} className="bg-gray-50 p-4 rounded-lg border border-gray-200 shadow-sm">
+                                <h4 className="text-xl font-semibold text-gray-800 mb-3">{section.title}</h4>
+                                {section.lectures && section.lectures.length > 0 ? (
+                                    <ul className="list-disc pl-5 space-y-2">
+                                        {section.lectures.sort((a, b) => a.order - b.order).map((lecture) => (
+                                            <li key={lecture._id} className="text-gray-700">
+                                                <span className="font-medium">{lecture.title}</span> - ({lecture.contentType})
+                                                {lecture.videoUrl && lecture.contentType === 'video' && (
+                                                    <div className="mt-2">
+                                                        <a href={lecture.videoUrl} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">Watch Video</a>
+                                                    </div>
+                                                )}
+                                                {lecture.content && lecture.contentType === 'text' && (
+                                                    <p className="text-sm text-gray-600 mt-1">{lecture.content}</p>
+                                                )}
+                                            </li>
+                                        ))}
+                                    </ul>
+                                ) : (
+                                    <p className="text-gray-500">No lectures in this section yet.</p>
+                                )}
+                            </div>
+                        ))}
+                    </div>
+                ) : (
+                    <p className="text-gray-600">No sections available for this course yet.</p>
+                )}
+            </div>
+
+            <div className="bg-white rounded-xl shadow-lg p-8 border border-gray-200">
+                <h3 className="text-3xl font-bold text-gray-800 mb-6">Student Reviews</h3>
+                {user && user.role === 'student' && (
+                    <button
+                        onClick={() => setShowReviewForm(!showReviewForm)}
+                        className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg mb-4 transition duration-300 shadow-md"
+                    >
+                        {showReviewForm ? 'Hide Review Form' : 'Write a Review'}
+                    </button>
+                )}
+                {showReviewForm && (
+                    <ReviewForm courseId={courseId} onReviewSubmitted={handleReviewSubmitted} />
+                )}
+
+                {reviews.length === 0 ? (
+                    <p className="text-gray-600">No reviews yet. Be the first to review this course!</p>
+                ) : (
+                    <div className="space-y-6 mt-4">
+                        {reviews.map((review) => (
+                            <div key={review._id} className="bg-gray-50 p-4 rounded-lg border border-gray-200 shadow-sm">
+                                <div className="flex items-center mb-2">
+                                    <p className="font-semibold text-gray-800 mr-2">{review.user.username}</p>
+                                    <div className="text-yellow-500 flex">
+                                        {[...Array(review.rating)].map((_, i) => (
+                                            <svg key={i} className="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M12 .587l3.668 7.425 8.216 1.192-5.95 5.795 1.406 8.188L12 18.896l-7.34-3.879 1.406-8.188L.116 9.204l8.216-1.192L12 .587z"/></svg>
+                                        ))}
+                                    </div>
+                                </div>
+                                <p className="text-gray-700">{review.comment}</p>
+                                <p className="text-gray-500 text-sm mt-2">Reviewed on: {new Date(review.createdAt).toLocaleDateString()}</p>
+                            </div>
+                        ))}
+                    </div>
+                )}
+            </div>
+        </div>
+    );
+};
+
+// ReviewForm Component
+const ReviewForm = ({ courseId, onReviewSubmitted }) => {
+    const [rating, setRating] = useState(0);
+    const [comment, setComment] = useState('');
+    const [message, setMessage] = useState('');
+    const { token } = useAuth();
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setMessage('');
+        if (rating === 0) {
+            setMessage('Please select a rating.');
+            return;
+        }
+
+        try {
+            const response = await fetch('http://localhost:5000/api/reviews', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ courseId, rating, comment })
+            });
+            const data = await response.json();
+
+            if (response.ok) {
+                setMessage('Review submitted successfully!');
+                setRating(0);
+                setComment('');
+                onReviewSubmitted(data); // Pass the new review back to parent
+            } else {
+                setMessage(data.message || 'Failed to submit review.');
+            }
+        } catch (error) {
+            console.error('Review submission error:', error);
+            setMessage('Network error. Please try again.');
+        }
+    };
+
+    return (
+        <form onSubmit={handleSubmit} className="bg-gray-100 p-6 rounded-lg shadow-inner mb-6 border border-gray-200">
+            <h4 className="text-xl font-bold text-gray-800 mb-4">Submit Your Review</h4>
+            {message && <p className={`mb-4 ${message.includes('successfully') ? 'text-green-600' : 'text-red-600'}`}>{message}</p>}
+            <div className="mb-4">
+                <label className="block text-gray-700 text-sm font-bold mb-2">Rating:</label>
+                <div className="flex">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                        <svg
+                            key={star}
+                            className={`w-8 h-8 cursor-pointer ${rating >= star ? 'text-yellow-500' : 'text-gray-300'} transition-colors duration-200`}
+                            onClick={() => setRating(star)}
+                            viewBox="0 0 24 24"
+                        >
+                            <path d="M12 .587l3.668 7.425 8.216 1.192-5.95 5.795 1.406 8.188L12 18.896l-7.34-3.879 1.406-8.188L.116 9.204l8.216-1.192L12 .587z"/>
+                        </svg>
+                    ))}
+                </div>
+            </div>
+            <div className="mb-4">
+                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="comment">
+                    Comment:
+                </label>
+                <textarea
+                    id="comment"
+                    className="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200"
+                    rows="4"
+                    value={comment}
+                    onChange={(e) => setComment(e.target.value)}
+                ></textarea>
+            </div>
+            <button
+                type="submit"
+                className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-lg transition duration-300 shadow-md"
+            >
+                Submit Review
+            </button>
+        </form>
+    );
+};
+
+
+// InstructorDashboard Component
+const InstructorDashboard = () => {
+    const { user, token } = useAuth();
+    const [courses, setCourses] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [showCourseForm, setShowCourseForm] = useState(false);
+    const [editingCourse, setEditingCourse] = useState(null);
+    const [selectedCourseForContent, setSelectedCourseForContent] = useState(null); // For managing sections/lectures
+
+    useEffect(() => {
+        if (user && token) {
+            fetchInstructorCourses();
+        }
+    }, [user, token]);
+
+    const fetchInstructorCourses = async () => {
+        setLoading(true);
+        setError(null);
+        try {
+            const response = await fetch('http://localhost:5000/api/courses', {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            if (!response.ok) {
+                throw new Error('Failed to fetch instructor courses');
+            }
+            const data = await response.json();
+            // Filter courses to show only those created by the current instructor
+            setCourses(data.filter(course => course.instructor._id === user._id));
+        } catch (err) {
+            setError(err.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleCourseCreated = (newCourse) => {
+        setCourses([...courses, newCourse].sort((a, b) => a.createdAt - b.createdAt)); // Sort by creation date
+        setShowCourseForm(false);
+    };
+
+    const handleCourseUpdated = (updatedCourse) => {
+        setCourses(courses.map(course => course._id === updatedCourse._id ? updatedCourse : course));
+        setEditingCourse(null);
+        setShowCourseForm(false);
+    };
+
+    const handleDeleteCourse = async (courseId) => {
+        if (window.confirm('Are you sure you want to delete this course and all its content?')) {
+            try {
+                const response = await fetch(`http://localhost:5000/api/courses/${courseId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                if (response.ok) {
+                    alert('Course deleted successfully.');
+                    fetchInstructorCourses(); // Refresh the list
+                } else {
+                    const data = await response.json();
+                    alert(data.message || 'Failed to delete course.');
+                }
+            } catch (err) {
+                console.error('Delete course error:', err);
+                alert('Network error during course deletion.');
+            }
+        }
+    };
+
+    if (!user || user.role !== 'instructor') {
+        return <div className="text-center text-xl text-red-600 mt-8">Access Denied. You must be an instructor to view this page.</div>;
+    }
+
+    if (loading) return <div className="text-center text-xl mt-8">Loading instructor dashboard...</div>;
+    if (error) return <div className="text-center text-xl text-red-600 mt-8">Error: {error}</div>;
+
+    return (
+        <div className="container mx-auto px-4 py-8">
+            <h2 className="text-4xl font-extrabold text-center text-gray-800 mb-10">Instructor Dashboard</h2>
+
+            <div className="mb-8 flex justify-end">
+                <button
+                    onClick={() => { setShowCourseForm(!showCourseForm); setEditingCourse(null); setSelectedCourseForContent(null); }}
+                    className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-6 rounded-lg transition duration-300 shadow-md transform hover:scale-105"
+                >
+                    {showCourseForm ? 'Cancel Add Course' : 'Add New Course'}
+                </button>
+            </div>
+
+            {showCourseForm && (
+                <CourseForm
+                    onCourseCreated={handleCourseCreated}
+                    onCourseUpdated={handleCourseUpdated}
+                    editingCourse={editingCourse}
+                />
+            )}
+
+            {selectedCourseForContent ? (
+                <CourseContentManager
+                    course={selectedCourseForContent}
+                    onBack={() => setSelectedCourseForContent(null)}
+                />
+            ) : (
+                <>
+                    <h3 className="text-3xl font-bold text-gray-800 mb-6">Your Courses</h3>
+                    {courses.length === 0 ? (
+                        <p className="text-center text-gray-600 text-lg">You haven't created any courses yet.</p>
+                    ) : (
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                            {courses.map((course) => (
+                                <div key={course._id} className="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+                                    <h4 className="text-2xl font-bold text-gray-900 mb-2">{course.title}</h4>
+                                    <p className="text-gray-600 text-sm mb-4 line-clamp-3">{course.description}</p>
+                                    <div className="flex justify-between items-center mb-4">
+                                        <span className="text-purple-700 font-semibold text-lg">${course.price}</span>
+                                        <span className="text-gray-500 text-sm">Category: {course.category}</span>
+                                    </div>
+                                    <div className="flex flex-col space-y-2">
+                                        <button
+                                            onClick={() => { setEditingCourse(course); setShowCourseForm(true); setSelectedCourseForContent(null); }}
+                                            className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg transition duration-300 shadow-md"
+                                        >
+                                            Edit Course
+                                        </button>
+                                        <button
+                                            onClick={() => setSelectedCourseForContent(course)}
+                                            className="bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-2 px-4 rounded-lg transition duration-300 shadow-md"
+                                        >
+                                            Manage Content
+                                        </button>
+                                        <button
+                                            onClick={() => handleDeleteCourse(course._id)}
+                                            className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg transition duration-300 shadow-md"
+                                        >
+                                            Delete Course
+                                        </button>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                </>
+            )}
+        </div>
+    );
+};
+
+// CourseForm Component (for creating/editing courses)
+const CourseForm = ({ onCourseCreated, onCourseUpdated, editingCourse }) => {
+    const [title, setTitle] = useState(editingCourse ? editingCourse.title : '');
+    const [description, setDescription] = useState(editingCourse ? editingCourse.description : '');
+    const [price, setPrice] = useState(editingCourse ? editingCourse.price : 0);
+    const [category, setCategory] = useState(editingCourse ? editingCourse.category : '');
+    const [thumbnail, setThumbnail] = useState(editingCourse ? editingCourse.thumbnail : 'https://placehold.co/600x400/E0E0E0/000000?text=Course+Thumbnail');
+    const [message, setMessage] = useState('');
+    const { token } = useAuth();
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setMessage('');
+
+        const courseData = { title, description, price: parseFloat(price), category, thumbnail };
+        const method = editingCourse ? 'PUT' : 'POST';
+        const url = editingCourse ? `http://localhost:5000/api/courses/${editingCourse._id}` : 'http://localhost:5000/api/courses';
+
+        try {
+            const response = await fetch(url, {
+                method,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify(courseData)
+            });
+            const data = await response.json();
+
+            if (response.ok) {
+                setMessage(`Course ${editingCourse ? 'updated' : 'created'} successfully!`);
+                if (editingCourse) {
+                    onCourseUpdated(data);
+                } else {
+                    onCourseCreated(data);
+                    // Clear form for new course creation
+                    setTitle('');
+                    setDescription('');
+                    setPrice(0);
+                    setCategory('');
+                    setThumbnail('https://placehold.co/600x400/E0E0E0/000000?text=Course+Thumbnail');
+                }
+            } else {
+                setMessage(data.message || `Failed to ${editingCourse ? 'update' : 'create'} course.`);
+            }
+        } catch (error) {
+            console.error('Course form error:', error);
+            setMessage('Network error. Please try again.');
+        }
+    };
+
+    return (
+        <div className="bg-white p-8 rounded-lg shadow-xl w-full max-w-2xl mx-auto mb-8 border border-gray-200">
+            <h3 className="text-2xl font-bold text-gray-800 mb-6 text-center">
+                {editingCourse ? 'Edit Course' : 'Create New Course'}
+            </h3>
+            {message && <p className={`mb-4 text-center ${message.includes('successfully') ? 'text-green-600' : 'text-red-600'}`}>{message}</p>}
+            <form onSubmit={handleSubmit} className="space-y-4">
+                <div>
+                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="title">Title</label>
+                    <input type="text" id="title" value={title} onChange={(e) => setTitle(e.target.value)} required
+                        className="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-purple-500" />
+                </div>
+                <div>
+                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="description">Description</label>
+                    <textarea id="description" value={description} onChange={(e) => setDescription(e.target.value)} required rows="4"
+                        className="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-purple-500"></textarea>
+                </div>
+                <div>
+                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="price">Price</label>
+                    <input type="number" id="price" value={price} onChange={(e) => setPrice(e.target.value)} required min="0" step="0.01"
+                        className="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-purple-500" />
+                </div>
+                <div>
+                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="category">Category</label>
+                    <input type="text" id="category" value={category} onChange={(e) => setCategory(e.target.value)} required
+                        className="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-purple-500" />
+                </div>
+                <div>
+                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="thumbnail">Thumbnail URL</label>
+                    <input type="text" id="thumbnail" value={thumbnail} onChange={(e) => setThumbnail(e.target.value)}
+                        className="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-purple-500" />
+                </div>
+                <button
+                    type="submit"
+                    className="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-6 rounded-lg transition duration-300 transform hover:scale-105 shadow-md"
+                >
+                    {editingCourse ? 'Update Course' : 'Create Course'}
+                </button>
+            </form>
+        </div>
+    );
+};
+
+// CourseContentManager Component (for managing sections and lectures)
+const CourseContentManager = ({ course, onBack }) => {
+    const { token } = useAuth();
+    const [sections, setSections] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [showSectionForm, setShowSectionForm] = useState(false);
+    const [editingSection, setEditingSection] = useState(null);
+    const [selectedSectionForLectures, setSelectedSectionForLectures] = useState(null);
+
+    useEffect(() => {
+        fetchSections();
+    }, [course._id]);
+
+    const fetchSections = async () => {
+        setLoading(true);
+        setError(null);
+        try {
+            const response = await fetch(`http://localhost:5000/api/courses/${course._id}/sections`);
+            if (!response.ok) {
+                throw new Error('Failed to fetch sections');
+            }
+            const data = await response.json();
+            setSections(data.sort((a, b) => a.order - b.order));
+        } catch (err) {
+            setError(err.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleSectionCreated = (newSection) => {
+        setSections([...sections, newSection].sort((a, b) => a.order - b.order));
+        setShowSectionForm(false);
+    };
+
+    const handleSectionUpdated = (updatedSection) => {
+        setSections(sections.map(sec => sec._id === updatedSection._id ? updatedSection : sec).sort((a, b) => a.order - b.order));
+        setEditingSection(null);
+        setShowSectionForm(false);
+    };
+
+    const handleDeleteSection = async (sectionId) => {
+        if (window.confirm('Are you sure you want to delete this section and all its lectures?')) {
+            try {
+                const response = await fetch(`http://localhost:5000/api/courses/${course._id}/sections/${sectionId}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (response.ok) {
+                    alert('Section deleted successfully.');
+                    fetchSections();
+                } else {
+                    const data = await response.json();
+                    alert(data.message || 'Failed to delete section.');
+                }
+            } catch (err) {
+                console.error('Delete section error:', err);
+                alert('Network error during section deletion.');
+            }
+        }
+    };
+
+    if (loading) return <div className="text-center text-xl mt-8">Loading course content...</div>;
+    if (error) return <div className="text-center text-xl text-red-600 mt-8">Error: {error}</div>;
+
+    return (
+        <div className="bg-white p-8 rounded-lg shadow-xl w-full mx-auto mb-8 border border-gray-200">
+            <button
+                onClick={onBack}
+                className="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg mb-6 transition duration-300 shadow-md"
+            >
+                &larr; Back to Courses
+            </button>
+            <h3 className="text-3xl font-bold text-gray-800 mb-6 text-center">Manage Content for "{course.title}"</h3>
+
+            <div className="mb-6 flex justify-end">
+                <button
+                    onClick={() => { setShowSectionForm(!showSectionForm); setEditingSection(null); setSelectedSectionForLectures(null); }}
+                    className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition duration-300 shadow-md"
+                >
+                    {showSectionForm ? 'Cancel Add Section' : 'Add New Section'}
+                </button>
+            </div>
+
+            {showSectionForm && (
+                <SectionForm
+                    courseId={course._id}
+                    onSectionCreated={handleSectionCreated}
+                    onSectionUpdated={handleSectionUpdated}
+                    editingSection={editingSection}
+                />
+            )}
+
+            {selectedSectionForLectures ? (
+                <LectureManager
+                    courseId={course._id}
+                    section={selectedSectionForLectures}
+                    onBack={() => setSelectedSectionForLectures(null)}
+                />
+            ) : (
+                <>
+                    <h4 className="text-2xl font-bold text-gray-800 mb-4">Sections</h4>
+                    {sections.length === 0 ? (
+                        <p className="text-gray-600">No sections added yet. Add your first section!</p>
+                    ) : (
+                        <div className="space-y-4">
+                            {sections.map((section) => (
+                                <div key={section._id} className="bg-gray-50 p-4 rounded-lg border border-gray-200 shadow-sm flex justify-between items-center">
+                                    <div>
+                                        <p className="text-xl font-semibold text-gray-800">{section.title} (Order: {section.order})</p>
+                                    </div>
+                                    <div className="flex space-x-2">
+                                        <button
+                                            onClick={() => { setEditingSection(section); setShowSectionForm(true); setSelectedSectionForLectures(null); }}
+                                            className="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-1 px-3 rounded-md text-sm transition duration-300"
+                                        >
+                                            Edit
+                                        </button>
+                                        <button
+                                            onClick={() => setSelectedSectionForLectures(section)}
+                                            className="bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-1 px-3 rounded-md text-sm transition duration-300"
+                                        >
+                                            Manage Lectures
+                                        </button>
+                                        <button
+                                            onClick={() => handleDeleteSection(section._id)}
+                                            className="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-3 rounded-md text-sm transition duration-300"
+                                        >
+                                            Delete
+                                        </button>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                </>
+            )}
+        </div>
+    );
+};
+
+// SectionForm Component
+const SectionForm = ({ courseId, onSectionCreated, onSectionUpdated, editingSection }) => {
+    const [title, setTitle] = useState(editingSection ? editingSection.title : '');
+    const [order, setOrder] = useState(editingSection ? editingSection.order : '');
+    const [message, setMessage] = useState('');
+    const { token } = useAuth();
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setMessage('');
+
+        const sectionData = { title, order: parseInt(order) };
+        const method = editingSection ? 'PUT' : 'POST';
+        const url = editingSection ? `http://localhost:5000/api/courses/${courseId}/sections/${editingSection._id}` : `http://localhost:5000/api/courses/${courseId}/sections`;
+
+        try {
+            const response = await fetch(url, {
+                method,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify(sectionData)
+            });
+            const data = await response.json();
+
+            if (response.ok) {
+                setMessage(`Section ${editingSection ? 'updated' : 'created'} successfully!`);
+                if (editingSection) {
+                    onSectionUpdated(data);
+                } else {
+                    onSectionCreated(data);
+                    setTitle('');
+                    setOrder('');
+                }
+            } else {
+                setMessage(data.message || `Failed to ${editingSection ? 'update' : 'create'} section.`);
+            }
+        } catch (error) {
+            console.error('Section form error:', error);
+            setMessage('Network error. Please try again.');
+        }
+    };
+
+    return (
+        <div className="bg-gray-100 p-6 rounded-lg shadow-inner mb-6 border border-gray-200">
+            <h4 className="text-xl font-bold text-gray-800 mb-4 text-center">
+                {editingSection ? 'Edit Section' : 'Add New Section'}
+            </h4>
+            {message && <p className={`mb-4 text-center ${message.includes('successfully') ? 'text-green-600' : 'text-red-600'}`}>{message}</p>}
+            <form onSubmit={handleSubmit} className="space-y-4">
+                <div>
+                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="sectionTitle">Title</label>
+                    <input type="text" id="sectionTitle" value={title} onChange={(e) => setTitle(e.target.value)} required
+                        className="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                </div>
+                <div>
+                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="sectionOrder">Order</label>
+                    <input type="number" id="sectionOrder" value={order} onChange={(e) => setOrder(e.target.value)} required min="0"
+                        className="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                </div>
+                <button
+                    type="submit"
+                    className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition duration-300 shadow-md"
+                >
+                    {editingSection ? 'Update Section' : 'Add Section'}
+                </button>
+            </form>
+        </div>
+    );
+};
+
+// LectureManager Component
+const LectureManager = ({ courseId, section, onBack }) => {
+    const { token } = useAuth();
+    const [lectures, setLectures] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [showLectureForm, setShowLectureForm] = useState(false);
+    const [editingLecture, setEditingLecture] = useState(null);
+
+    useEffect(() => {
+        fetchLectures();
+    }, [section._id]);
+
+    const fetchLectures = async () => {
+        setLoading(true);
+        setError(null);
+        try {
+            const response = await fetch(`http://localhost:5000/api/courses/${courseId}/sections/${section._id}/lectures`);
+            if (!response.ok) {
+                throw new Error('Failed to fetch lectures');
+            }
+            const data = await response.json();
+            setLectures(data.sort((a, b) => a.order - b.order));
+        } catch (err) {
+            setError(err.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleLectureCreated = (newLecture) => {
+        setLectures([...lectures, newLecture].sort((a, b) => a.order - b.order));
+        setShowLectureForm(false);
+    };
+
+    const handleLectureUpdated = (updatedLecture) => {
+        setLectures(lectures.map(lec => lec._id === updatedLecture._id ? updatedLecture : lec).sort((a, b) => a.order - b.order));
+        setEditingLecture(null);
+        setShowLectureForm(false);
+    };
+
+    const handleDeleteLecture = async (lectureId) => {
+        if (window.confirm('Are you sure you want to delete this lecture?')) {
+            try {
+                const response = await fetch(`http://localhost:5000/api/courses/${courseId}/sections/${section._id}/lectures/${lectureId}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (response.ok) {
+                    alert('Lecture deleted successfully.');
+                    fetchLectures();
+                } else {
+                    const data = await response.json();
+                    alert(data.message || 'Failed to delete lecture.');
+                }
+            } catch (err) {
+                console.error('Delete lecture error:', err);
+                alert('Network error during lecture deletion.');
+            }
+        }
+    };
+
+    if (loading) return <div className="text-center text-xl mt-8">Loading lectures...</div>;
+    if (error) return <div className="text-center text-xl text-red-600 mt-8">Error: {error}</div>;
+
+    return (
+        <div className="bg-white p-8 rounded-lg shadow-xl w-full mx-auto mb-8 border border-gray-200">
+            <button
+                onClick={onBack}
+                className="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg mb-6 transition duration-300 shadow-md"
+            >
+                &larr; Back to Sections
+            </button>
+            <h3 className="text-3xl font-bold text-gray-800 mb-6 text-center">Manage Lectures for "{section.title}"</h3>
+
+            <div className="mb-6 flex justify-end">
+                <button
+                    onClick={() => { setShowLectureForm(!showLectureForm); setEditingLecture(null); }}
+                    className="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg transition duration-300 shadow-md"
+                >
+                    {showLectureForm ? 'Cancel Add Lecture' : 'Add New Lecture'}
+                </button>
+            </div>
+
+            {showLectureForm && (
+                <LectureForm
+                    courseId={courseId}
+                    sectionId={section._id}
+                    onLectureCreated={handleLectureCreated}
+                    onLectureUpdated={handleLectureUpdated}
+                    editingLecture={editingLecture}
+                />
+            )}
+
+            <h4 className="text-2xl font-bold text-gray-800 mb-4">Lectures</h4>
+            {lectures.length === 0 ? (
+                <p className="text-gray-600">No lectures added yet. Add your first lecture!</p>
+            ) : (
+                <div className="space-y-4">
+                    {lectures.map((lecture) => (
+                        <div key={lecture._id} className="bg-gray-50 p-4 rounded-lg border border-gray-200 shadow-sm flex justify-between items-center">
+                            <div>
+                                <p className="text-xl font-semibold text-gray-800">{lecture.title} (Order: {lecture.order})</p>
+                                <p className="text-gray-600 text-sm">Type: {lecture.contentType}</p>
+                            </div>
+                            <div className="flex space-x-2">
+                                <button
+                                    onClick={() => { setEditingLecture(lecture); setShowLectureForm(true); }}
+                                    className="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-1 px-3 rounded-md text-sm transition duration-300"
+                                >
+                                    Edit
+                                </button>
+                                <button
+                                    onClick={() => handleDeleteLecture(lecture._id)}
+                                    className="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-3 rounded-md text-sm transition duration-300"
+                                >
+                                    Delete
+                                </button>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            )}
+        </div>
+    );
+};
+
+// LectureForm Component
+const LectureForm = ({ courseId, sectionId, onLectureCreated, onLectureUpdated, editingLecture }) => {
+    const [title, setTitle] = useState(editingLecture ? editingLecture.title : '');
+    const [description, setDescription] = useState(editingLecture ? editingLecture.description : '');
+    const [videoUrl, setVideoUrl] = useState(editingLecture ? editingLecture.videoUrl : '');
+    const [contentType, setContentType] = useState(editingLecture ? editingLecture.contentType : 'video');
+    const [content, setContent] = useState(editingLecture ? editingLecture.content : '');
+    const [order, setOrder] = useState(editingLecture ? editingLecture.order : '');
+    const [message, setMessage] = useState('');
+    const { token } = useAuth();
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setMessage('');
+
+        const lectureData = { title, description, videoUrl, contentType, content, order: parseInt(order) };
+        const method = editingLecture ? 'PUT' : 'POST';
+        const url = editingLecture ? `http://localhost:5000/api/courses/${courseId}/sections/${sectionId}/lectures/${editingLecture._id}` : `http://localhost:5000/api/courses/${courseId}/sections/${sectionId}/lectures`;
+
+        try {
+            const response = await fetch(url, {
+                method,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify(lectureData)
+            });
+            const data = await response.json();
+
+            if (response.ok) {
+                setMessage(`Lecture ${editingLecture ? 'updated' : 'created'} successfully!`);
+                if (editingLecture) {
+                    onLectureUpdated(data);
+                } else {
+                    onLectureCreated(data);
+                    setTitle('');
+                    setDescription('');
+                    setVideoUrl('');
+                    setContentType('video');
+                    setContent('');
+                    setOrder('');
+                }
+            } else {
+                setMessage(data.message || `Failed to ${editingLecture ? 'update' : 'create'} lecture.`);
+            }
+        } catch (error) {
+            console.error('Lecture form error:', error);
+            setMessage('Network error. Please try again.');
+        }
+    };
+
+    return (
+        <div className="bg-gray-100 p-6 rounded-lg shadow-inner mb-6 border border-gray-200">
+            <h4 className="text-xl font-bold text-gray-800 mb-4 text-center">
+                {editingLecture ? 'Edit Lecture' : 'Add New Lecture'}
+            </h4>
+            {message && <p className={`mb-4 text-center ${message.includes('successfully') ? 'text-green-600' : 'text-red-600'}`}>{message}</p>}
+            <form onSubmit={handleSubmit} className="space-y-4">
+                <div>
+                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="lectureTitle">Title</label>
+                    <input type="text" id="lectureTitle" value={title} onChange={(e) => setTitle(e.target.value)} required
+                        className="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-green-500" />
+                </div>
+                <div>
+                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="lectureDescription">Description</label>
+                    <textarea id="lectureDescription" value={description} onChange={(e) => setDescription(e.target.value)} rows="2"
+                        className="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-green-500"></textarea>
+                </div>
+                <div>
+                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="contentType">Content Type</label>
+                    <select id="contentType" value={contentType} onChange={(e) => setContentType(e.target.value)}
+                        className="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-green-500">
+                        <option value="video">Video</option>
+                        <option value="text">Text</option>
+                        <option value="quiz">Quiz (Conceptual)</option>
+                    </select>
+                </div>
+                {contentType === 'video' && (
+                    <div>
+                        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="videoUrl">Video URL</label>
+                        <input type="url" id="videoUrl" value={videoUrl} onChange={(e) => setVideoUrl(e.target.value)}
+                            className="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-green-500" />
+                    </div>
+                )}
+                {(contentType === 'text' || contentType === 'quiz') && (
+                    <div>
+                        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="content">Content</label>
+                        <textarea id="content" value={content} onChange={(e) => setContent(e.target.value)} rows="4"
+                            className="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-green-500"></textarea>
+                    </div>
+                )}
+                <div>
+                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="lectureOrder">Order</label>
+                    <input type="number" id="lectureOrder" value={order} onChange={(e) => setOrder(e.target.value)} required min="0"
+                        className="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-green-500" />
+                </div>
+                <button
+                    type="submit"
+                    className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg transition duration-300 shadow-md"
+                >
+                    {editingLecture ? 'Update Lecture' : 'Add Lecture'}
+                </button>
+            </form>
+        </div>
+    );
+};
+
+// UserDashboard (My Courses) Component
+const UserDashboard = () => {
+    const { user, token } = useAuth();
+    const [enrollments, setEnrollments] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        if (user && token) {
+            fetchMyCourses();
+        }
+    }, [user, token]);
+
+    const fetchMyCourses = async () => {
+        setLoading(true);
+        setError(null);
+        try {
+            const response = await fetch('http://localhost:5000/api/enrollments/my-courses', {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            if (!response.ok) {
+                throw new Error('Failed to fetch enrolled courses');
+            }
+            const data = await response.json();
+            setEnrollments(data);
+        } catch (err) {
+            setError(err.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleProgressUpdate = async (enrollmentId, newProgress) => {
+        try {
+            const response = await fetch(`http://localhost:5000/api/enrollments/${enrollmentId}/progress`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ progress: newProgress, completed: newProgress === 100 })
+            });
+            if (response.ok) {
+                fetchMyCourses(); // Refresh enrollments to show updated progress
+            } else {
+                const data = await response.json();
+                alert(data.message || 'Failed to update progress.');
+            }
+        } catch (err) {
+            console.error('Progress update error:', err);
+            alert('Network error during progress update.');
+        }
+    };
+
+    if (!user) {
+        return <div className="text-center text-xl text-red-600 mt-8">Please login to view your enrolled courses.</div>;
+    }
+
+    if (loading) return <div className="text-center text-xl mt-8">Loading your courses...</div>;
+    if (error) return <div className="text-center text-xl text-red-600 mt-8">Error: {error}</div>;
+
+    return (
+        <div className="container mx-auto px-4 py-8">
+            <h2 className="text-4xl font-extrabold text-center text-gray-800 mb-10">My Enrolled Courses</h2>
+            {enrollments.length === 0 ? (
+                <p className="text-center text-gray-600 text-lg">You haven't enrolled in any courses yet. <button onClick={() => window.location.hash = '#/home'} className="text-purple-600 hover:underline">Explore courses</button>!</p>
+            ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    {enrollments.map((enrollment) => (
+                        <div key={enrollment._id} className="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+                            <h3 className="text-2xl font-bold text-gray-900 mb-2">{enrollment.course.title}</h3>
+                            <p className="text-gray-600 text-sm mb-4 line-clamp-3">{enrollment.course.description}</p>
+                            <div className="mb-4">
+                                <p className="text-gray-700 text-sm font-semibold mb-1">Progress: {enrollment.progress}%</p>
+                                <div className="w-full bg-gray-200 rounded-full h-2.5">
+                                    <div
+                                        className="bg-green-500 h-2.5 rounded-full"
+                                        style={{ width: `${enrollment.progress}%` }}
+                                    ></div>
+                                </div>
+                            </div>
+                            <div className="flex justify-between items-center mb-4">
+                                <button
+                                    onClick={() => window.location.hash = `#/course/${enrollment.course._id}`}
+                                    className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-lg transition duration-300 shadow-md"
+                                >
+                                    Continue Learning
+                                </button>
+                                <input
+                                    type="number"
+                                    min="0"
+                                    max="100"
+                                    value={enrollment.progress}
+                                    onChange={(e) => handleProgressUpdate(enrollment._id, parseInt(e.target.value))}
+                                    className="w-20 border rounded-lg p-1 text-center"
+                                    title="Update Progress"
+                                />
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            )}
+        </div>
+    );
+};
+
+// Profile Component
+const Profile = () => {
+    const { user, token, updateUser } = useAuth();
+    const [username, setUsername] = useState(user ? user.username : '');
+    const [email, setEmail] = useState(user ? user.email : '');
+    const [message, setMessage] = useState('');
+
+    useEffect(() => {
+        if (user) {
+            setUsername(user.username);
+            setEmail(user.email);
+        }
+    }, [user]);
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setMessage('');
+        try {
+            const response = await fetch('http://localhost:5000/api/users/profile', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ username, email })
+            });
+            const data = await response.json();
+
+            if (response.ok) {
+                setMessage('Profile updated successfully!');
+                updateUser(data); // Update user in AuthContext
+            } else {
+                setMessage(data.message || 'Failed to update profile.');
+            }
+        } catch (error) {
+            console.error('Profile update error:', error);
+            setMessage('Network error. Please try again.');
+        }
+    };
+
+    if (!user) {
+        return <div className="text-center text-xl text-red-600 mt-8">Please login to view your profile.</div>;
+    }
+
+    return (
+        <div className="flex justify-center items-center min-h-[calc(100vh-160px)]">
+            <form onSubmit={handleSubmit} className="bg-white p-8 rounded-lg shadow-xl w-full max-w-md border border-gray-200">
+                <h2 className="text-3xl font-bold mb-6 text-center text-purple-700">User Profile</h2>
+                {message && <p className={`mb-4 text-center ${message.includes('successful') ? 'text-green-600' : 'text-red-600'}`}>{message}</p>}
+                <div className="mb-4">
+                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="profileUsername">
+                        Username
+                    </label>
+                    <input
+                        type="text"
+                        id="profileUsername"
+                        className="shadow appearance-none border rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-purple-500"
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}
+                        required
+                    />
+                </div>
+                <div className="mb-4">
+                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="profileEmail">
+                        Email
+                    </label>
+                    <input
+                        type="email"
+                        id="profileEmail"
+                        className="shadow appearance-none border rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-purple-500"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        required
+                    />
+                </div>
+                <div className="mb-6">
+                    <label className="block text-gray-700 text-sm font-bold mb-2">
+                        Role: <span className="font-semibold capitalize">{user.role}</span>
+                    </label>
+                </div>
+                <div className="flex items-center justify-between">
+                    <button
+                        type="submit"
+                        className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-6 rounded-lg focus:outline-none focus:shadow-outline transition duration-300 transform hover:scale-105 w-full"
+                    >
+                        Update Profile
+                    </button>
+                </div>
+            </form>
+        </div>
+    );
+};
+
+// --- New Components for Books ---
+
+// BookList Component
+const BookList = () => {
+    const [books, setBooks] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        const fetchBooks = async () => {
+            try {
+                const response = await fetch('http://localhost:5000/api/books'); // Assuming /api/books endpoint
+                if (!response.ok) {
+                    throw new Error('Failed to fetch books');
+                }
+                const data = await response.json();
+                setBooks(data);
+            } catch (err) {
+                setError(err.message);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchBooks();
+    }, []);
+
+    if (loading) return <div className="text-center text-xl mt-8">Loading books...</div>;
+    if (error) return <div className="text-center text-xl text-red-600 mt-8">Error: {error}</div>;
+
+    return (
+        <div className="container mx-auto px-4 py-8">
+            <h2 className="text-4xl font-extrabold text-center text-gray-800 mb-10">Explore Our Books</h2>
+            {books.length === 0 ? (
+                <p className="text-center text-gray-600 text-lg">No books available yet. Check back later!</p>
+            ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    {books.map((book) => (
+                        <div key={book._id} className="bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-200">
+                            <img
+                                src={book.coverImage || 'https://placehold.co/400x600/E0E0E0/000000?text=Book+Cover'}
+                                alt={book.title}
+                                className="w-full h-64 object-cover object-center rounded-t-xl"
+                                onError={(e) => { e.target.onerror = null; e.target.src = 'https://placehold.co/400x600/E0E0E0/000000?text=Book+Cover'; }}
+                            />
+                            <div className="p-6">
+                                <h3 className="text-2xl font-bold text-gray-900 mb-2">{book.title}</h3>
+                                <p className="text-gray-600 text-sm mb-4 line-clamp-3">{book.description}</p>
+                                <div className="flex justify-between items-center mb-4">
+                                    <span className="text-purple-700 font-semibold text-lg">${book.price}</span>
+                                    <span className="text-gray-500 text-sm">Author: {book.author}</span>
+                                </div>
+                                <button
+                                    onClick={() => window.location.hash = `#/book/${book._id}`}
+                                    className="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-6 rounded-lg transition duration-300 transform hover:scale-105 shadow-md"
+                                >
+                                    View Book
+                                </button>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            )}
+        </div>
+    );
+};
+
+// BookDetail Component
+const BookDetail = ({ bookId }) => {
+    const [book, setBook] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const { user, token } = useAuth(); // Assuming purchase requires auth
+
+    useEffect(() => {
+        const fetchBook = async () => {
+            try {
+                const response = await fetch(`http://localhost:5000/api/books/${bookId}`); // Assuming /api/books/:id
+                if (!response.ok) {
+                    throw new Error('Failed to fetch book details');
+                }
+                const data = await response.json();
+                setBook(data);
+            } catch (err) {
+                setError(err.message);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchBook();
+    }, [bookId]);
+
+    const handlePurchase = async () => {
+        if (!user || !token) {
+            alert('Please login to purchase this book.');
+            return;
+        }
+        // This would involve a payment gateway integration
+        alert(`Simulating purchase of "${book.title}" for $${book.price}. In a real app, this would process payment.`);
+        // You'd typically make a POST request to your backend's payment route
+        // Example:
+        /*
+        try {
+            const response = await fetch('http://localhost:5000/api/payments/purchase-book', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ bookId: book._id, amount: book.price })
+            });
+            const data = await response.json();
+            if (response.ok) {
+                alert(data.message || 'Book purchased successfully!');
+                // Optionally redirect or update UI
+            } else {
+                alert(data.message || 'Failed to purchase book.');
+            }
+        } catch (err) {
+            console.error('Purchase error:', err);
+            alert('Network error during purchase.');
+        }
+        */
+    };
+
+    if (loading) return <div className="text-center text-xl mt-8">Loading book details...</div>;
+    if (error) return <div className="text-center text-xl text-red-600 mt-8">Error: {error}</div>;
+    if (!book) return <div className="text-center text-xl mt-8">Book not found.</div>;
+
+    return (
+        <div className="container mx-auto px-4 py-8">
+            <div className="bg-white rounded-xl shadow-lg p-8 mb-8 border border-gray-200 flex flex-col md:flex-row items-center md:items-start gap-8">
+                <img
+                    src={book.coverImage || 'https://placehold.co/400x600/E0E0E0/000000?text=Book+Cover'}
+                    alt={book.title}
+                    className="w-full md:w-1/3 h-auto object-cover object-center rounded-lg shadow-md"
+                    onError={(e) => { e.target.onerror = null; e.target.src = 'https://placehold.co/400x600/E0E0E0/000000?text=Book+Cover'; }}
+                />
+                <div className="flex-1">
+                    <h2 className="text-4xl font-extrabold text-gray-900 mb-4">{book.title}</h2>
+                    <p className="text-gray-700 text-lg mb-6">{book.description}</p>
+                    <div className="flex items-center justify-between mb-6 border-b pb-4">
+                        <span className="text-purple-700 font-bold text-3xl">${book.price}</span>
+                        <span className="text-gray-600 text-md">Author: {book.author}</span>
+                        <span className="text-gray-600 text-md">Published: {new Date(book.publishedDate).toLocaleDateString()}</span>
+                    </div>
+                    <button
+                        onClick={handlePurchase}
+                        className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg transition duration-300 transform hover:scale-105 shadow-md"
+                    >
+                        Purchase Book
+                    </button>
+                    {book.pdfUrl && ( // Assuming a PDF URL for download after purchase (or if free)
+                        <a
+                            href={book.pdfUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="block text-center mt-4 text-blue-600 hover:underline"
+                        >
+                            Download PDF (if purchased/free)
+                        </a>
+                    )}
+                </div>
+            </div>
+        </div>
+    );
+};
+
+// --- New Components for Quizzes ---
+
+// QuizList Component
+const QuizList = () => {
+    const [quizzes, setQuizzes] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        const fetchQuizzes = async () => {
+            try {
+                const response = await fetch('http://localhost:5000/api/quizzes'); // Assuming /api/quizzes endpoint
+                if (!response.ok) {
+                    throw new Error('Failed to fetch quizzes');
+                }
+                const data = await response.json();
+                setQuizzes(data);
+            } catch (err) {
+                setError(err.message);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchQuizzes();
+    }, []);
+
+    if (loading) return <div className="text-center text-xl mt-8">Loading quizzes...</div>;
+    if (error) return <div className="text-center text-xl text-red-600 mt-8">Error: {error}</div>;
+
+    return (
+        <div className="container mx-auto px-4 py-8">
+            <h2 className="text-4xl font-extrabold text-center text-gray-800 mb-10">Available Quizzes</h2>
+            {quizzes.length === 0 ? (
+                <p className="text-center text-gray-600 text-lg">No quizzes available yet. Check back later!</p>
+            ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    {quizzes.map((quiz) => (
+                        <div key={quiz._id} className="bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-200 p-6">
+                            <h3 className="text-2xl font-bold text-gray-900 mb-2">{quiz.title}</h3>
+                            <p className="text-gray-600 text-sm mb-4 line-clamp-3">{quiz.description}</p>
+                            <div className="flex justify-between items-center mb-4">
+                                <span className="text-gray-500 text-sm">Questions: {quiz.questions ? quiz.questions.length : 0}</span>
+                                {quiz.course && <span className="text-gray-500 text-sm">Course: {quiz.course.title}</span>}
+                            </div>
+                            <button
+                                onClick={() => window.location.hash = `#/quiz/${quiz._id}`}
+                                className="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-6 rounded-lg transition duration-300 transform hover:scale-105 shadow-md"
+                            >
+                                View Quiz
+                            </button>
+                        </div>
+                    ))}
+                </div>
+            )}
+        </div>
+    );
+};
+
+// QuizDetail Component
+const QuizDetail = ({ quizId }) => {
+    const [quiz, setQuiz] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const { user } = useAuth();
+
+    useEffect(() => {
+        const fetchQuiz = async () => {
+            try {
+                const response = await fetch(`http://localhost:5000/api/quizzes/${quizId}`); // Assuming /api/quizzes/:id
+                if (!response.ok) {
+                    throw new Error('Failed to fetch quiz details');
+                }
+                const data = await response.json();
+                setQuiz(data);
+            } catch (err) {
+                setError(err.message);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchQuiz();
+    }, [quizId]);
+
+    const handleStartQuiz = () => {
+        if (!user) {
+            alert('Please login to start a quiz.');
+            return;
+        }
+        window.location.hash = `#/quiz/attempt/${quizId}`;
+    };
+
+    if (loading) return <div className="text-center text-xl mt-8">Loading quiz details...</div>;
+    if (error) return <div className="text-center text-xl text-red-600 mt-8">Error: {error}</div>;
+    if (!quiz) return <div className="text-center text-xl mt-8">Quiz not found.</div>;
+
+    return (
+        <div className="container mx-auto px-4 py-8">
+            <div className="bg-white rounded-xl shadow-lg p-8 mb-8 border border-gray-200">
+                <h2 className="text-4xl font-extrabold text-gray-900 mb-4">{quiz.title}</h2>
+                <p className="text-gray-700 text-lg mb-6">{quiz.description}</p>
+                <div className="flex items-center justify-between mb-6 border-b pb-4">
+                    <span className="text-gray-600 text-md">Total Questions: {quiz.questions ? quiz.questions.length : 0}</span>
+                    {quiz.course && <span className="text-gray-600 text-md">Associated Course: {quiz.course.title}</span>}
+                </div>
+                {user && (
+                    <button
+                        onClick={handleStartQuiz}
+                        className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg transition duration-300 transform hover:scale-105 shadow-md"
+                    >
+                        Start Quiz
+                    </button>
+                )}
+                {!user && (
+                    <p className="text-center text-red-500 mt-4">Login to start this quiz.</p>
+                )}
+            </div>
+        </div>
+    );
+};
+
+// QuizAttempt Component (Simplified)
+const QuizAttempt = ({ quizId }) => {
+    const [quiz, setQuiz] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [answers, setAnswers] = useState({});
+    const [submitted, setSubmitted] = useState(false);
+    const [score, setScore] = useState(null);
+    const { user, token } = useAuth();
+
+    useEffect(() => {
+        const fetchQuizForAttempt = async () => {
+            try {
+                const response = await fetch(`http://localhost:5000/api/quizzes/${quizId}`);
+                if (!response.ok) {
+                    throw new Error('Failed to fetch quiz for attempt');
+                }
+                const data = await response.json();
+                setQuiz(data);
+                // Initialize answers state
+                const initialAnswers = {};
+                data.questions.forEach((q) => {
+                    initialAnswers[q._id] = ''; // For single choice/text
+                    if (q.type === 'multiple-choice' && q.options) {
+                        initialAnswers[q._id] = []; // For multiple choice
+                    }
+                });
+                setAnswers(initialAnswers);
+            } catch (err) {
+                setError(err.message);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchQuizForAttempt();
+    }, [quizId]);
+
+    const handleAnswerChange = (questionId, value, type) => {
+        setAnswers(prevAnswers => {
+            const newAnswers = { ...prevAnswers };
+            if (type === 'multiple-choice') {
+                // Toggle selection for multiple choice
+                const currentSelections = newAnswers[questionId] || [];
+                if (currentSelections.includes(value)) {
+                    newAnswers[questionId] = currentSelections.filter(item => item !== value);
+                } else {
+                    newAnswers[questionId] = [...currentSelections, value];
+                }
+            } else {
+                newAnswers[questionId] = value;
+            }
+            return newAnswers;
+        });
+    };
+
+    const handleSubmitQuiz = async () => {
+        if (!user || !token) {
+            alert('You must be logged in to submit a quiz.');
+            return;
+        }
+
+        try {
+            const response = await fetch('http://localhost:5000/api/quizzes/submit-attempt', { // Assuming submit-attempt endpoint
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ quizId, answers })
+            });
+            const data = await response.json();
+
+            if (response.ok) {
+                setScore(data.score);
+                setSubmitted(true);
+                alert(`Quiz submitted! Your score: ${data.score}/${quiz.questions.length}`);
+            } else {
+                alert(data.message || 'Failed to submit quiz.');
+            }
+        } catch (err) {
+            console.error('Quiz submission error:', err);
+            alert('Network error during quiz submission.');
+        }
+    };
+
+    if (loading) return <div className="text-center text-xl mt-8">Loading quiz...</div>;
+    if (error) return <div className="text-center text-xl text-red-600 mt-8">Error: {error}</div>;
+    if (!quiz) return <div className="text-center text-xl mt-8">Quiz not found.</div>;
+    if (submitted) return (
+        <div className="container mx-auto px-4 py-8 text-center bg-white rounded-xl shadow-lg p-8 border border-gray-200">
+            <h2 className="text-3xl font-bold text-gray-800 mb-4">Quiz Completed!</h2>
+            <p className="text-xl text-green-600 mb-6">Your Score: {score}/{quiz.questions.length}</p>
+            <button
+                onClick={() => window.location.hash = '#/quizzes'}
+                className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-lg transition duration-300 shadow-md"
+            >
+                Back to Quizzes
+            </button>
+        </div>
+    );
+
+    return (
+        <div className="container mx-auto px-4 py-8">
+            <div className="bg-white rounded-xl shadow-lg p-8 mb-8 border border-gray-200">
+                <h2 className="text-4xl font-extrabold text-gray-900 mb-6">{quiz.title}</h2>
+                <p className="text-gray-700 text-lg mb-8">{quiz.description}</p>
+
+                <form className="space-y-8">
+                    {quiz.questions && quiz.questions.length > 0 ? (
+                        quiz.questions.map((question, index) => (
+                            <div key={question._id} className="bg-gray-50 p-6 rounded-lg border border-gray-200 shadow-sm">
+                                <p className="text-xl font-semibold text-gray-800 mb-4">
+                                    {index + 1}. {question.questionText}
+                                </p>
+                                {question.type === 'single-choice' && (
+                                    <div className="space-y-2">
+                                        {question.options && question.options.map((option, optIndex) => (
+                                            <label key={optIndex} className="flex items-center text-gray-700 cursor-pointer">
+                                                <input
+                                                    type="radio"
+                                                    name={`question-${question._id}`}
+                                                    value={option}
+                                                    checked={answers[question._id] === option}
+                                                    onChange={() => handleAnswerChange(question._id, option, 'single-choice')}
+                                                    className="mr-2 h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded"
+                                                />
+                                                {option}
+                                            </label>
+                                        ))}
+                                    </div>
+                                )}
+                                {question.type === 'multiple-choice' && (
+                                    <div className="space-y-2">
+                                        {question.options && question.options.map((option, optIndex) => (
+                                            <label key={optIndex} className="flex items-center text-gray-700 cursor-pointer">
+                                                <input
+                                                    type="checkbox"
+                                                    name={`question-${question._id}`}
+                                                    value={option}
+                                                    checked={answers[question._id]?.includes(option) || false}
+                                                    onChange={() => handleAnswerChange(question._id, option, 'multiple-choice')}
+                                                    className="mr-2 h-4 w-4 text-purple-600 focus:ring-purple-500 rounded"
+                                                />
+                                                {option}
+                                            </label>
+                                        ))}
+                                    </div>
+                                )}
+                                {question.type === 'text' && (
+                                    <div>
+                                        <textarea
+                                            className="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-purple-500"
+                                            rows="3"
+                                            value={answers[question._id] || ''}
+                                            onChange={(e) => handleAnswerChange(question._id, e.target.value, 'text')}
+                                        ></textarea>
+                                    </div>
+                                )}
+                            </div>
+                        ))
+                    ) : (
+                        <p className="text-gray-600">No questions found for this quiz.</p>
+                    )}
+                    <button
+                        type="button"
+                        onClick={handleSubmitQuiz}
+                        className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition duration-300 transform hover:scale-105 shadow-md mt-8"
+                    >
+                        Submit Quiz
+                    </button>
+                </form>
+            </div>
+        </div>
+    );
+};
+
+
+// Main App Component
+const App = () => {
+    const [user, setUser] = useState(null);
+    const [token, setToken] = useState(null);
+    const [currentPath, setCurrentPath] = useState(window.location.hash.slice(1) || '/home');
+
+    // Check for stored token and user on initial load
+    useEffect(() => {
+        const storedToken = localStorage.getItem('token');
+        const storedUser = localStorage.getItem('user');
+        if (storedToken && storedUser) {
+            try {
+                setUser(JSON.parse(storedUser));
+                setToken(storedToken);
+            } catch (e) {
+                console.error("Failed to parse stored user or token:", e);
+                localStorage.removeItem('token');
+                localStorage.removeItem('user');
+            }
+        }
+
+        // Listen for hash changes for simple routing
+        const handleHashChange = () => {
+            setCurrentPath(window.location.hash.slice(1) || '/home');
+        };
+        window.addEventListener('hashchange', handleHashChange);
+        return () => {
+            window.removeEventListener('hashchange', handleHashChange);
+        };
+    }, []);
+
+    const login = async (email, password) => {
+        const response = await fetch('http://localhost:5000/api/auth/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password }),
+        });
+        const data = await response.json();
+
+        if (response.ok) {
+            setUser({ _id: data._id, username: data.username, email: data.email, role: data.role });
+            setToken(data.token);
+            localStorage.setItem('user', JSON.stringify({ _id: data._id, username: data.username, email: data.email, role: data.role }));
+            localStorage.setItem('token', data.token);
+        } else {
+            throw new Error(data.message || 'Login failed');
+        }
+    };
+
+    const logout = () => {
+        setUser(null);
+        setToken(null);
+        localStorage.removeItem('user');
+        localStorage.removeItem('token');
+        window.location.hash = '#/login'; // Redirect to login after logout
+    };
+
+    const updateUser = (updatedUserData) => {
+        setUser(updatedUserData);
+        localStorage.setItem('user', JSON.stringify(updatedUserData));
+    };
+
+    // Helper to extract ID from path
+    const getIdFromPath = (path, prefix) => {
+        const match = path.match(new RegExp(`^/${prefix}/(.+)$`));
+        return match ? match[1] : null;
+    };
+
+    const courseId = getIdFromPath(currentPath, 'course');
+    const bookId = getIdFromPath(currentPath, 'book');
+    const quizId = getIdFromPath(currentPath, 'quiz');
+    const quizAttemptId = getIdFromPath(currentPath, 'quiz/attempt');
+
+
+    let ComponentToRender;
+    switch (true) { // Use true for switch to enable pattern matching
+        case currentPath === '/login':
+            ComponentToRender = Login;
+            break;
+        case currentPath === '/register':
+            ComponentToRender = Register;
+            break;
+        case currentPath === '/instructor-dashboard':
+            ComponentToRender = InstructorDashboard;
+            break;
+        case currentPath === '/my-courses':
+            ComponentToRender = UserDashboard;
+            break;
+        case currentPath === '/profile':
+            ComponentToRender = Profile;
+            break;
+        case currentPath === '/books':
+            ComponentToRender = BookList;
+            break;
+        case !!bookId: // If bookId is not null
+            ComponentToRender = () => <BookDetail bookId={bookId} />;
+            break;
+        case currentPath === '/quizzes':
+            ComponentToRender = QuizList;
+            break;
+        case !!quizId && !currentPath.startsWith('/quiz/attempt/'): // Quiz detail, not attempt
+            ComponentToRender = () => <QuizDetail quizId={quizId} />;
+            break;
+        case !!quizAttemptId: // Quiz attempt
+            ComponentToRender = () => <QuizAttempt quizId={quizAttemptId} />;
+            break;
+        case currentPath === '/home':
+        default:
+            ComponentToRender = CourseList;
+            break;
+    }
+
+    return (
+        <AuthContext.Provider value={{ user, token, login, logout, updateUser }}>
+            <div className="min-h-screen flex flex-col font-inter bg-gray-100">
+                <Header />
+                <main className="flex-grow container mx-auto px-4 py-8">
+                    <ComponentToRender />
+                </main>
+                <Footer />
+            </div>
+        </AuthContext.Provider>
+    );
+};
+
+export default App;

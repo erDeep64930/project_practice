@@ -1,0 +1,899 @@
+Backend_Code:-
+
+
+// server.js
+// This is the main entry point for the Express.js backend application.
+// It sets up the server, connects to the database, and registers all API routes.
+
+// Load environment variables from .env file
+require('dotenv').config();
+const express = require('express');
+const mongoose = require('mongoose');
+const cors = require('cors'); // Import cors to allow cross-origin requests
+const path = require('path'); // Import path module for serving static files
+
+// Import routes
+const authRoutes = require('./routes/authRoutes');
+const userRoutes = require('./routes/userRoutes');
+const courseRoutes = require('./routes/courseRoutes');
+const enrollmentRoutes = require('./routes/enrollmentRoutes');
+const reviewRoutes = require('./routes/reviewRoutes');
+
+const app = express();
+
+// Middleware
+app.use(express.json()); // Enable parsing of JSON request bodies
+app.use(cors()); // Enable CORS for all origins (for development)
+
+// Database Connection
+const mongoURI = process.env.MONGO_URI || 'mongodb://localhost:27017/udemy_clone';
+
+mongoose.connect(mongoURI)
+    .then(() => console.log('MongoDB connected successfully!'))
+    .catch(err => console.error('MongoDB connection error:', err));
+
+// API Routes
+// All routes are prefixed with /api
+app.use('/api/auth', authRoutes);
+app.use('/api/users', userRoutes);
+app.use('/api/courses', courseRoutes);
+app.use('/api/enrollments', enrollmentRoutes);
+app.use('/api/reviews', reviewRoutes);
+
+// Basic route for the root URL
+app.get('/', (req, res) => {
+    res.send('E-Learning Platform Backend API is running!');
+});
+
+// Error handling middleware (should be the last middleware)
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).send('Something broke!');
+});
+
+// Server Port
+const PORT = process.env.PORT || 5000;
+
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+});
+
+// --- Models ---
+// models/User.js
+// Defines the Mongoose schema for a User.
+const userSchema = new mongoose.Schema({
+    username: { type: String, required: true, unique: true },
+    email: { type: String, required: true, unique: true },
+    password: { type: String, required: true },
+    role: { type: String, enum: ['student', 'instructor', 'admin'], default: 'student' },
+    createdAt: { type: Date, default: Date.now }
+});
+const User = mongoose.model('User', userSchema);
+// module.exports = User; // This would typically be in a separate file
+
+// models/Course.js
+// Defines the Mongoose schema for a Course.
+const courseSchema = new mongoose.Schema({
+    title: { type: String, required: true },
+    description: { type: String, required: true },
+    price: { type: Number, required: true, default: 0 },
+    instructor: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    category: { type: String, required: true },
+    thumbnail: { type: String, default: 'https://placehold.co/600x400/E0E0E0/000000?text=Course+Thumbnail' }, // Placeholder image
+    createdAt: { type: Date, default: Date.now },
+    updatedAt: { type: Date, default: Date.now }
+});
+const Course = mongoose.model('Course', courseSchema);
+// module.exports = Course; // This would typically be in a separate file
+
+// models/Section.js
+// Defines the Mongoose schema for a Section within a Course.
+const sectionSchema = new mongoose.Schema({
+    title: { type: String, required: true },
+    course: { type: mongoose.Schema.Types.ObjectId, ref: 'Course', required: true },
+    order: { type: Number, required: true }, // Order of sections within a course
+    createdAt: { type: Date, default: Date.now }
+});
+const Section = mongoose.model('Section', sectionSchema);
+// module.exports = Section; // This would typically be in a separate file
+
+// models/Lecture.js
+// Defines the Mongoose schema for a Lecture within a Section.
+const lectureSchema = new mongoose.Schema({
+    title: { type: String, required: true },
+    description: { type: String },
+    section: { type: mongoose.Schema.Types.ObjectId, ref: 'Section', required: true },
+    course: { type: mongoose.Schema.Types.ObjectId, ref: 'Course', required: true }, // Redundant but useful for direct query
+    videoUrl: { type: String }, // URL to video content (e.g., S3, YouTube embed)
+    contentType: { type: String, enum: ['video', 'text', 'quiz'], default: 'video' },
+    content: { type: String }, // For text or quiz content
+    order: { type: Number, required: true }, // Order of lectures within a section
+    createdAt: { type: Date, default: Date.now }
+});
+const Lecture = mongoose.model('Lecture', lectureSchema);
+// module.exports = Lecture; // This would typically be in a separate file
+
+// models/Enrollment.js
+// Defines the Mongoose schema for a Course Enrollment.
+const enrollmentSchema = new mongoose.Schema({
+    user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    course: { type: mongoose.Schema.Types.ObjectId, ref: 'Course', required: true },
+    progress: { type: Number, default: 0 }, // Percentage of course completed
+    completed: { type: Boolean, default: false },
+    enrolledAt: { type: Date, default: Date.now }
+});
+// Ensure unique enrollment per user per course
+enrollmentSchema.index({ user: 1, course: 1 }, { unique: true });
+const Enrollment = mongoose.model('Enrollment', enrollmentSchema);
+// module.exports = Enrollment; // This would typically be in a separate file
+
+// models/Review.js
+// Defines the Mongoose schema for a Course Review.
+const reviewSchema = new mongoose.Schema({
+    user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    course: { type: mongoose.Schema.Types.ObjectId, ref: 'Course', required: true },
+    rating: { type: Number, required: true, min: 1, max: 5 },
+    comment: { type: String },
+    createdAt: { type: Date, default: Date.now }
+});
+// Ensure unique review per user per course
+reviewSchema.index({ user: 1, course: 1 }, { unique: true });
+const Review = mongoose.model('Review', reviewSchema);
+// module.exports = Review; // This would typically be in a separate file
+
+
+// --- Middleware ---
+// middleware/authMiddleware.js
+// Middleware to verify JWT token and attach user to request.
+const jwt = require('jsonwebtoken');
+// const User = require('../models/User'); // In a real app, this would be imported
+
+const protect = async (req, res, next) => {
+    let token;
+    if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
+        try {
+            // Get token from header
+            token = req.headers.authorization.split(' ')[1];
+
+            // Verify token
+            const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+            // Attach user from token to the request
+            req.user = await User.findById(decoded.id).select('-password');
+            if (!req.user) {
+                return res.status(401).json({ message: 'Not authorized, user not found' });
+            }
+            next();
+        } catch (error) {
+            console.error(error);
+            res.status(401).json({ message: 'Not authorized, token failed' });
+        }
+    }
+    if (!token) {
+        res.status(401).json({ message: 'Not authorized, no token' });
+    }
+};
+
+const authorizeRoles = (...roles) => {
+    return (req, res, next) => {
+        if (!req.user || !roles.includes(req.user.role)) {
+            return res.status(403).json({ message: `User role ${req.user ? req.user.role : 'unknown'} is not authorized to access this route.` });
+        }
+        next();
+    };
+};
+
+// module.exports = { protect, authorizeRoles }; // This would typically be in a separate file
+
+
+// --- Routes ---
+// routes/authRoutes.js
+// Handles user authentication (register, login).
+const expressAuth = require('express'); // Renamed to avoid conflict with top-level 'express'
+const routerAuth = expressAuth.Router();
+const bcrypt = require('bcryptjs');
+// const jwt = require('jsonwebtoken'); // In a real app, this would be imported
+// const User = require('../models/User'); // In a real app, this would be imported
+
+// Generate JWT token
+const generateToken = (id) => {
+    return jwt.sign({ id }, process.env.JWT_SECRET, {
+        expiresIn: '1h', // Token expires in 1 hour
+    });
+};
+
+// @desc    Register a new user
+// @route   POST /api/auth/register
+// @access  Public
+routerAuth.post('/register', async (req, res) => {
+    const { username, email, password, role } = req.body;
+
+    if (!username || !email || !password) {
+        return res.status(400).json({ message: 'Please enter all fields' });
+    }
+
+    try {
+        // Check if user already exists
+        let user = await User.findOne({ email });
+        if (user) {
+            return res.status(400).json({ message: 'User already exists' });
+        }
+
+        // Hash password
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
+
+        // Create new user
+        user = await User.create({
+            username,
+            email,
+            password: hashedPassword,
+            role: role || 'student' // Default role is student
+        });
+
+        if (user) {
+            res.status(201).json({
+                _id: user.id,
+                username: user.username,
+                email: user.email,
+                role: user.role,
+                token: generateToken(user._id),
+            });
+        } else {
+            res.status(400).json({ message: 'Invalid user data' });
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+
+// @desc    Authenticate user & get token
+// @route   POST /api/auth/login
+// @access  Public
+routerAuth.post('/login', async (req, res) => {
+    const { email, password } = req.body;
+
+    try {
+        // Check for user email
+        const user = await User.findOne({ email });
+
+        if (user && (await bcrypt.compare(password, user.password))) {
+            res.json({
+                _id: user.id,
+                username: user.username,
+                email: user.email,
+                role: user.role,
+                token: generateToken(user._id),
+            });
+        } else {
+            res.status(400).json({ message: 'Invalid credentials' });
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+
+// module.exports = routerAuth; // This would typically be in a separate file
+
+
+// routes/userRoutes.js
+// Handles user profile management.
+const expressUser = require('express');
+const routerUser = expressUser.Router();
+// const { protect } = require('../middleware/authMiddleware'); // In a real app, this would be imported
+// const User = require('../models/User'); // In a real app, this would be imported
+
+// @desc    Get user profile
+// @route   GET /api/users/profile
+// @access  Private
+routerUser.get('/profile', protect, async (req, res) => {
+    // req.user is set by the protect middleware
+    res.json(req.user);
+});
+
+// @desc    Update user profile
+// @route   PUT /api/users/profile
+// @access  Private
+routerUser.put('/profile', protect, async (req, res) => {
+    const { username, email } = req.body; // Password change would be a separate route
+
+    try {
+        const user = await User.findById(req.user._id);
+
+        if (user) {
+            user.username = username || user.username;
+            user.email = email || user.email;
+
+            const updatedUser = await user.save();
+
+            res.json({
+                _id: updatedUser.id,
+                username: updatedUser.username,
+                email: updatedUser.email,
+                role: updatedUser.role,
+            });
+        } else {
+            res.status(404).json({ message: 'User not found' });
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+
+// module.exports = routerUser; // This would typically be in a separate file
+
+
+// routes/courseRoutes.js
+// Handles course, section, and lecture management.
+const expressCourse = require('express');
+const routerCourse = expressCourse.Router();
+// const { protect, authorizeRoles } = require('../middleware/authMiddleware'); // In a real app, this would be imported
+// const Course = require('../models/Course'); // In a real app, this would be imported
+// const Section = require('../models/Section'); // In a real app, this would be imported
+// const Lecture = require('../models/Lecture'); // In a real app, this would be imported
+
+// --- Course Routes ---
+
+// @desc    Get all courses
+// @route   GET /api/courses
+// @access  Public
+routerCourse.get('/', async (req, res) => {
+    try {
+        const courses = await Course.find({}).populate('instructor', 'username email');
+        res.json(courses);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+
+// @desc    Get single course by ID
+// @route   GET /api/courses/:id
+// @access  Public
+routerCourse.get('/:id', async (req, res) => {
+    try {
+        const course = await Course.findById(req.params.id)
+            .populate('instructor', 'username email')
+            .populate({
+                path: 'sections',
+                model: 'Section',
+                populate: {
+                    path: 'lectures',
+                    model: 'Lecture'
+                }
+            });
+
+        if (course) {
+            res.json(course);
+        } else {
+            res.status(404).json({ message: 'Course not found' });
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+
+// @desc    Create a new course
+// @route   POST /api/courses
+// @access  Private/Instructor
+routerCourse.post('/', protect, authorizeRoles('instructor', 'admin'), async (req, res) => {
+    const { title, description, price, category, thumbnail } = req.body;
+
+    if (!title || !description || !price || !category) {
+        return res.status(400).json({ message: 'Please fill all required fields' });
+    }
+
+    try {
+        const course = new Course({
+            title,
+            description,
+            price,
+            category,
+            thumbnail,
+            instructor: req.user._id, // Instructor is the logged-in user
+        });
+
+        const createdCourse = await course.save();
+        res.status(201).json(createdCourse);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+
+// @desc    Update a course
+// @route   PUT /api/courses/:id
+// @access  Private/Instructor
+routerCourse.put('/:id', protect, authorizeRoles('instructor', 'admin'), async (req, res) => {
+    const { title, description, price, category, thumbnail } = req.body;
+
+    try {
+        const course = await Course.findById(req.params.id);
+
+        if (course) {
+            // Ensure only the instructor who created the course or an admin can update it
+            if (course.instructor.toString() !== req.user._id.toString() && req.user.role !== 'admin') {
+                return res.status(403).json({ message: 'Not authorized to update this course' });
+            }
+
+            course.title = title || course.title;
+            course.description = description || course.description;
+            course.price = price !== undefined ? price : course.price;
+            course.category = category || course.category;
+            course.thumbnail = thumbnail || course.thumbnail;
+            course.updatedAt = Date.now();
+
+            const updatedCourse = await course.save();
+            res.json(updatedCourse);
+        } else {
+            res.status(404).json({ message: 'Course not found' });
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+
+// @desc    Delete a course
+// @route   DELETE /api/courses/:id
+// @access  Private/Instructor
+routerCourse.delete('/:id', protect, authorizeRoles('instructor', 'admin'), async (req, res) => {
+    try {
+        const course = await Course.findById(req.params.id);
+
+        if (course) {
+            // Ensure only the instructor who created the course or an admin can delete it
+            if (course.instructor.toString() !== req.user._id.toString() && req.user.role !== 'admin') {
+                return res.status(403).json({ message: 'Not authorized to delete this course' });
+            }
+
+            // Delete associated sections and lectures first
+            await Section.deleteMany({ course: course._id });
+            await Lecture.deleteMany({ course: course._id });
+            await Enrollment.deleteMany({ course: course._id }); // Also delete enrollments
+            await Review.deleteMany({ course: course._id }); // Also delete reviews
+
+            await Course.deleteOne({ _id: req.params.id }); // Use deleteOne for clarity
+            res.json({ message: 'Course removed' });
+        } else {
+            res.status(404).json({ message: 'Course not found' });
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+
+// --- Section Routes ---
+
+// @desc    Get sections for a specific course
+// @route   GET /api/courses/:courseId/sections
+// @access  Public
+routerCourse.get('/:courseId/sections', async (req, res) => {
+    try {
+        const sections = await Section.find({ course: req.params.courseId }).sort('order');
+        res.json(sections);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+
+// @desc    Create a new section for a course
+// @route   POST /api/courses/:courseId/sections
+// @access  Private/Instructor
+routerCourse.post('/:courseId/sections', protect, authorizeRoles('instructor', 'admin'), async (req, res) => {
+    const { title, order } = req.body;
+    const courseId = req.params.courseId;
+
+    if (!title || order === undefined) {
+        return res.status(400).json({ message: 'Please provide title and order for the section' });
+    }
+
+    try {
+        const course = await Course.findById(courseId);
+        if (!course) {
+            return res.status(404).json({ message: 'Course not found' });
+        }
+        if (course.instructor.toString() !== req.user._id.toString() && req.user.role !== 'admin') {
+            return res.status(403).json({ message: 'Not authorized to add sections to this course' });
+        }
+
+        const section = new Section({
+            title,
+            course: courseId,
+            order
+        });
+
+        const createdSection = await section.save();
+        res.status(201).json(createdSection);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+
+// @desc    Update a section
+// @route   PUT /api/courses/:courseId/sections/:sectionId
+// @access  Private/Instructor
+routerCourse.put('/:courseId/sections/:sectionId', protect, authorizeRoles('instructor', 'admin'), async (req, res) => {
+    const { title, order } = req.body;
+    const { courseId, sectionId } = req.params;
+
+    try {
+        const section = await Section.findOne({ _id: sectionId, course: courseId });
+
+        if (!section) {
+            return res.status(404).json({ message: 'Section not found for this course' });
+        }
+
+        const course = await Course.findById(courseId);
+        if (!course || (course.instructor.toString() !== req.user._id.toString() && req.user.role !== 'admin')) {
+            return res.status(403).json({ message: 'Not authorized to update sections for this course' });
+        }
+
+        section.title = title || section.title;
+        section.order = order !== undefined ? order : section.order;
+
+        const updatedSection = await section.save();
+        res.json(updatedSection);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+
+// @desc    Delete a section
+// @route   DELETE /api/courses/:courseId/sections/:sectionId
+// @access  Private/Instructor
+routerCourse.delete('/:courseId/sections/:sectionId', protect, authorizeRoles('instructor', 'admin'), async (req, res) => {
+    const { courseId, sectionId } = req.params;
+
+    try {
+        const section = await Section.findOne({ _id: sectionId, course: courseId });
+
+        if (!section) {
+            return res.status(404).json({ message: 'Section not found for this course' });
+        }
+
+        const course = await Course.findById(courseId);
+        if (!course || (course.instructor.toString() !== req.user._id.toString() && req.user.role !== 'admin')) {
+            return res.status(403).json({ message: 'Not authorized to delete sections from this course' });
+        }
+
+        // Delete associated lectures first
+        await Lecture.deleteMany({ section: sectionId });
+
+        await Section.deleteOne({ _id: sectionId });
+        res.json({ message: 'Section removed' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+
+// --- Lecture Routes ---
+
+// @desc    Get lectures for a specific section
+// @route   GET /api/courses/:courseId/sections/:sectionId/lectures
+// @access  Public
+routerCourse.get('/:courseId/sections/:sectionId/lectures', async (req, res) => {
+    try {
+        const lectures = await Lecture.find({ section: req.params.sectionId, course: req.params.courseId }).sort('order');
+        res.json(lectures);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+
+// @desc    Create a new lecture for a section
+// @route   POST /api/courses/:courseId/sections/:sectionId/lectures
+// @access  Private/Instructor
+routerCourse.post('/:courseId/sections/:sectionId/lectures', protect, authorizeRoles('instructor', 'admin'), async (req, res) => {
+    const { title, description, videoUrl, contentType, content, order } = req.body;
+    const { courseId, sectionId } = req.params;
+
+    if (!title || order === undefined) {
+        return res.status(400).json({ message: 'Please provide title and order for the lecture' });
+    }
+
+    try {
+        const course = await Course.findById(courseId);
+        if (!course || (course.instructor.toString() !== req.user._id.toString() && req.user.role !== 'admin')) {
+            return res.status(403).json({ message: 'Not authorized to add lectures to this course' });
+        }
+
+        const section = await Section.findById(sectionId);
+        if (!section || section.course.toString() !== courseId) {
+            return res.status(404).json({ message: 'Section not found for this course' });
+        }
+
+        const lecture = new Lecture({
+            title,
+            description,
+            videoUrl,
+            contentType,
+            content,
+            section: sectionId,
+            course: courseId,
+            order
+        });
+
+        const createdLecture = await lecture.save();
+        res.status(201).json(createdLecture);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+
+// @desc    Update a lecture
+// @route   PUT /api/courses/:courseId/sections/:sectionId/lectures/:lectureId
+// @access  Private/Instructor
+routerCourse.put('/:courseId/sections/:sectionId/lectures/:lectureId', protect, authorizeRoles('instructor', 'admin'), async (req, res) => {
+    const { title, description, videoUrl, contentType, content, order } = req.body;
+    const { courseId, sectionId, lectureId } = req.params;
+
+    try {
+        const lecture = await Lecture.findOne({ _id: lectureId, section: sectionId, course: courseId });
+
+        if (!lecture) {
+            return res.status(404).json({ message: 'Lecture not found for this section and course' });
+        }
+
+        const course = await Course.findById(courseId);
+        if (!course || (course.instructor.toString() !== req.user._id.toString() && req.user.role !== 'admin')) {
+            return res.status(403).json({ message: 'Not authorized to update lectures for this course' });
+        }
+
+        lecture.title = title || lecture.title;
+        lecture.description = description !== undefined ? description : lecture.description;
+        lecture.videoUrl = videoUrl !== undefined ? videoUrl : lecture.videoUrl;
+        lecture.contentType = contentType || lecture.contentType;
+        lecture.content = content !== undefined ? content : lecture.content;
+        lecture.order = order !== undefined ? order : lecture.order;
+
+        const updatedLecture = await lecture.save();
+        res.json(updatedLecture);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+
+// @desc    Delete a lecture
+// @route   DELETE /api/courses/:courseId/sections/:sectionId/lectures/:lectureId
+// @access  Private/Instructor
+routerCourse.delete('/:courseId/sections/:sectionId/lectures/:lectureId', protect, authorizeRoles('instructor', 'admin'), async (req, res) => {
+    const { courseId, sectionId, lectureId } = req.params;
+
+    try {
+        const lecture = await Lecture.findOne({ _id: lectureId, section: sectionId, course: courseId });
+
+        if (!lecture) {
+            return res.status(404).json({ message: 'Lecture not found for this section and course' });
+        }
+
+        const course = await Course.findById(courseId);
+        if (!course || (course.instructor.toString() !== req.user._id.toString() && req.user.role !== 'admin')) {
+            return res.status(403).json({ message: 'Not authorized to delete lectures from this course' });
+        }
+
+        await Lecture.deleteOne({ _id: lectureId });
+        res.json({ message: 'Lecture removed' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+
+// module.exports = routerCourse; // This would typically be in a separate file
+
+
+// routes/enrollmentRoutes.js
+// Handles course enrollment.
+const expressEnrollment = require('express');
+const routerEnrollment = expressEnrollment.Router();
+// const { protect } = require('../middleware/authMiddleware'); // In a real app, this would be imported
+// const Enrollment = require('../models/Enrollment'); // In a real app, this would be imported
+// const Course = require('../models/Course'); // In a real app, this would be imported
+
+// @desc    Enroll in a course
+// @route   POST /api/enrollments
+// @access  Private/Student
+routerEnrollment.post('/', protect, async (req, res) => {
+    const { courseId } = req.body;
+    const userId = req.user._id;
+
+    if (!courseId) {
+        return res.status(400).json({ message: 'Course ID is required' });
+    }
+
+    try {
+        // Check if course exists
+        const course = await Course.findById(courseId);
+        if (!course) {
+            return res.status(404).json({ message: 'Course not found' });
+        }
+
+        // Check if already enrolled
+        const existingEnrollment = await Enrollment.findOne({ user: userId, course: courseId });
+        if (existingEnrollment) {
+            return res.status(400).json({ message: 'Already enrolled in this course' });
+        }
+
+        const enrollment = new Enrollment({
+            user: userId,
+            course: courseId,
+            progress: 0,
+            completed: false
+        });
+
+        const createdEnrollment = await enrollment.save();
+        res.status(201).json(createdEnrollment);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+
+// @desc    Get user's enrollments
+// @route   GET /api/enrollments/my-courses
+// @access  Private/Student
+routerEnrollment.get('/my-courses', protect, async (req, res) => {
+    try {
+        const enrollments = await Enrollment.find({ user: req.user._id }).populate('course');
+        res.json(enrollments);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+
+// @desc    Update enrollment progress
+// @route   PUT /api/enrollments/:id/progress
+// @access  Private/Student
+routerEnrollment.put('/:id/progress', protect, async (req, res) => {
+    const { progress, completed } = req.body;
+
+    try {
+        const enrollment = await Enrollment.findOne({ _id: req.params.id, user: req.user._id });
+
+        if (enrollment) {
+            if (progress !== undefined) {
+                enrollment.progress = Math.min(100, Math.max(0, progress)); // Ensure progress is between 0 and 100
+            }
+            if (completed !== undefined) {
+                enrollment.completed = completed;
+            }
+            const updatedEnrollment = await enrollment.save();
+            res.json(updatedEnrollment);
+        } else {
+            res.status(404).json({ message: 'Enrollment not found or not authorized' });
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+
+// module.exports = routerEnrollment; // This would typically be in a separate file
+
+
+// routes/reviewRoutes.js
+// Handles course reviews and ratings.
+const expressReview = require('express');
+const routerReview = expressReview.Router();
+// const { protect } = require('../middleware/authMiddleware'); // In a real app, this would be imported
+// const Review = require('../models/Review'); // In a real app, this would be imported
+// const Course = require('../models/Course'); // In a real app, this would be imported
+
+// @desc    Get all reviews for a specific course
+// @route   GET /api/reviews/:courseId
+// @access  Public
+routerReview.get('/:courseId', async (req, res) => {
+    try {
+        const reviews = await Review.find({ course: req.params.courseId }).populate('user', 'username');
+        res.json(reviews);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+
+// @desc    Submit a review for a course
+// @route   POST /api/reviews
+// @access  Private/Student
+routerReview.post('/', protect, async (req, res) => {
+    const { courseId, rating, comment } = req.body;
+    const userId = req.user._id;
+
+    if (!courseId || !rating) {
+        return res.status(400).json({ message: 'Course ID and rating are required' });
+    }
+    if (rating < 1 || rating > 5) {
+        return res.status(400).json({ message: 'Rating must be between 1 and 5' });
+    }
+
+    try {
+        // Check if course exists
+        const course = await Course.findById(courseId);
+        if (!course) {
+            return res.status(404).json({ message: 'Course not found' });
+        }
+
+        // Check if user has already reviewed this course
+        const existingReview = await Review.findOne({ user: userId, course: courseId });
+        if (existingReview) {
+            return res.status(400).json({ message: 'You have already reviewed this course. Please update your existing review.' });
+        }
+
+        const review = new Review({
+            user: userId,
+            course: courseId,
+            rating,
+            comment
+        });
+
+        const createdReview = await review.save();
+        res.status(201).json(createdReview);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+
+// @desc    Update a review
+// @route   PUT /api/reviews/:id
+// @access  Private/Student
+routerReview.put('/:id', protect, async (req, res) => {
+    const { rating, comment } = req.body;
+
+    try {
+        const review = await Review.findOne({ _id: req.params.id, user: req.user._id });
+
+        if (review) {
+            if (rating !== undefined) {
+                if (rating < 1 || rating > 5) {
+                    return res.status(400).json({ message: 'Rating must be between 1 and 5' });
+                }
+                review.rating = rating;
+            }
+            review.comment = comment !== undefined ? comment : review.comment;
+
+            const updatedReview = await review.save();
+            res.json(updatedReview);
+        } else {
+            res.status(404).json({ message: 'Review not found or not authorized' });
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+
+// @desc    Delete a review
+// @route   DELETE /api/reviews/:id
+// @access  Private/Student
+routerReview.delete('/:id', protect, async (req, res) => {
+    try {
+        const review = await Review.findOne({ _id: req.params.id, user: req.user._id });
+
+        if (review) {
+            await Review.deleteOne({ _id: req.params.id });
+            res.json({ message: 'Review removed' });
+        } else {
+            res.status(404).json({ message: 'Review not found or not authorized' });
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+
+// module.exports = routerReview; // This would typically be in a separate file

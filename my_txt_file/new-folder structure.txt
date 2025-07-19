@@ -1,0 +1,54 @@
+new-folder structure
+
+/project-root
+│
+├── config/                  # Configuration files (db, env, etc.)
+│   └── db.js
+│
+├── controllers/             # Route handlers logic (business logic)
+│   ├── authController.js
+│   ├── userController.js
+│   ├── courseController.js
+│   ├── sectionController.js
+│   ├── lectureController.js
+│   ├── enrollmentController.js
+│   ├── reviewController.js
+│   ├── bookController.js          # New for book selling
+│   └── quizController.js          # New for quiz functionality
+│
+├── middleware/              # Middleware like auth, error handling
+│   ├── authMiddleware.js
+│   └── errorMiddleware.js
+│
+├── models/                  # Mongoose schemas/models
+│   ├── User.js
+│   ├── Course.js
+│   ├── Section.js
+│   ├── Lecture.js
+│   ├── Enrollment.js
+│   ├── Review.js
+│   ├── Book.js                # New Book model
+│   ├── Quiz.js                # New Quiz model
+│   └── QuizAttempt.js         # User quiz attempts and results
+│
+├── routes/                  # Express route definitions
+│   ├── authRoutes.js
+│   ├── userRoutes.js
+│   ├── courseRoutes.js
+│   ├── sectionRoutes.js
+│   ├── lectureRoutes.js
+│   ├── enrollmentRoutes.js
+│   ├── reviewRoutes.js
+│   ├── bookRoutes.js          # New book routes
+│   └── quizRoutes.js          # New quiz routes
+│
+├── utils/                   # Utility functions/helpers
+│   └── generateToken.js
+│
+├── uploads/                 # Static folder to store uploaded PDFs, if needed
+│
+├── server.js                # Main app entry
+│
+├── .env                     # Environment variables
+│
+└── package.json

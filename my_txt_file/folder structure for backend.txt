@@ -1,0 +1,42 @@
+folder structure for backend 
+
+
+project-root/
+│
+├── config/
+│   └── db.js                # DB connection logic
+│
+├── controllers/             # Handles logic for each route
+│   ├── auth.controller.js
+│   ├── user.controller.js
+│   ├── course.controller.js
+│   ├── section.controller.js
+│   ├── lecture.controller.js
+│   ├── enrollment.controller.js
+│   └── review.controller.js
+│
+├── models/                  # Mongoose schemas
+│   ├── User.js
+│   ├── Course.js
+│   ├── Section.js
+│   ├── Lecture.js
+│   ├── Enrollment.js
+│   └── Review.js
+│
+├── middleware/
+│   ├── auth.js              # Protect/authenticate middleware
+│   └── errorHandler.js      # Global error handler
+│
+├── routes/                  # API route definitions
+│   ├── auth.routes.js
+│   ├── user.routes.js
+│   ├── course.routes.js
+│   ├── enrollment.routes.js
+│   └── review.routes.js
+│
+├── utils/
+│   └── generateToken.js     # JWT utility function
+│
+├── .env                     # Environment variables
+├── server.js                # Entry point
+└── package.json
